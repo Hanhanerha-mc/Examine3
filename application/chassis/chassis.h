@@ -1,8 +1,8 @@
 #ifndef _CHASSIS_H_
 #define _CHASSIS_H_
 
-#include "motor.h"
 #include "pid.h"
+#include "motor.h"
 
 typedef struct
 {
@@ -18,5 +18,7 @@ typedef struct
     MotorInstance *motor_instance[4];
     PIDInstance *speed_pid;
 } Chassis_Init_Config_s; 
+
+void chassis_init();
 
 #endif
