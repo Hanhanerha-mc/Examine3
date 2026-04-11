@@ -2,7 +2,7 @@
 #include "bsp.h"
 #include "chassis.h"
 
-void StartMotorTask(void const *argument);
+void StartMotorTask();
 
 osThreadId motorTaskHandle;
 
@@ -14,11 +14,11 @@ void TaskInit()
     motorTaskHandle = osThreadCreate(osThread(motorContrl), NULL);
 }
 
-void StartMotorTask(void const *argument)
+void StartMotorTask()
 {
     while (1)
     {
-        
+        MotorContorl(); // 执行电机控制逻辑
         osDelay(10); // 10ms周期
     }
 }
