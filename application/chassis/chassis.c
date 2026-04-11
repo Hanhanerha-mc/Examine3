@@ -11,13 +11,6 @@ void chassis_init()
     ChassisInstance *instance = (ChassisInstance *)malloc(sizeof(ChassisInstance));
     memset(instance, 0, sizeof(ChassisInstance));
     
-    PID_Init_Config_s pid_config = {
-        .kp = 1,
-        .ki = 0,
-        .kd = 0,
-        .i_max = 0,
-        .out_max = 100,
-    };
     // instance->speed_pid = PID_init(&pid_config);
     
     // Motor_Init_Config_s motor_config = {
@@ -38,7 +31,7 @@ void chassis_init()
                 .RTR = CAN_RTR_DATA,
                 .DLC = 0x08,
             },
-            .rx_id = 0x201,
+            .rx_id = 0x203,
             // 回调函数与父指针在MotorInit中设置
         },
         .working_flag = RUNNING,
@@ -52,17 +45,25 @@ void chassis_init()
             .out_max = 0,
         },
         .speed_pid_config = {
-            .kp = 1,
+            .kp = 7.5,
             .ki = 0,
             .kd = 0,
             .i_max = 0,
-            .out_max = 5000,
+            .out_max = 2000,
         },
         .ref = 0,
     };
     
-    instance->motor_instance[0] = Motor_init_and_grouping(&motor_config, 1);
-    instance->motor_instance[1] = Motor_init_and_grouping(&motor_config, 2);    
-    instance->motor_instance[2] = Motor_init_and_grouping(&motor_config, 3);
-    instance->motor_instance[3] = Motor_init_and_grouping(&motor_config, 4);
+    /*顺序是lf，rf，lb，rb*/
+    instance->motor_lf = Motor_init_and_grouping(&motor_config, 3);
+    motor_config.can_config.rx_id = 0x204; // 修改接收ID
+    motor_config.speed_pid_config.kp = 5;
+    instance->motor_rf = Motor_init_and_grouping(&motor_config, 4);
+    motor_config.can_config.rx_id = 0x202; // 修改接收ID
+    motor_config.speed_pid_config.kp = 6;
+    instance->motor_lb = Motor_init_and_grouping(&motor_config, 2);
+    motor_config.can_config.rx_id = 0x201; // 修改接收ID
+    motor_config.speed_pid_config.kp = 8.5;
+    instance->motor_rb = Motor_init_and_grouping(&motor_config, 1);
 }
+

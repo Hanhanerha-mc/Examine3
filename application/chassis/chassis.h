@@ -6,7 +6,10 @@
 
 typedef struct
 {
-    MotorInstance *motor_instance[4];
+    MotorInstance *motor_lf;
+    MotorInstance *motor_rf;
+    MotorInstance *motor_lb;
+    MotorInstance *motor_rb;
     PIDInstance *speed_pid;
 } ChassisInstance;
 

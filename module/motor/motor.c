@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#define MAX_SPEED_REF 3.0f
+
 static uint8_t idx = 0;                                           // 电机实例索引
 static MotorInstance *motorInstance[MAX_MOTOR_CNT] = {NULL};        // 电机实例指针数组
 static uint8_t motorGroup[4] = {0, 0, 0, 0};      // 存储该组是否含有电机，0表示没有，1表示有
@@ -162,6 +164,26 @@ void MotorContorl(void)
 //         if (motorGroup[i]) CANTransmit(can_instance[i]);
 //     }
 // }
+
+void MotorWorkClose(MotorInstance *instance)
+{
+    instance->working_flag = STOP;
+}
+
+void MotorModeSwitch(MotorInstance *instance, Motor_control_mode_e mode)
+{
+    instance->working_flag = RUNNING;
+    instance->control_mode = mode;
+}
+
+void MotorSetSpeed(MotorInstance *instance, float ref)
+{
+    instance->working_flag = RUNNING;
+    instance->ref = LimitValue_float(ref, -MAX_SPEED_REF, MAX_SPEED_REF);
+    instance->speed_pid->err[0] = 0; // 重置PID误差
+    instance->speed_pid->i_out = 0; // 重置积分项
+}
+
 static void MotorCallback(CANInstance *can_instance)
 {
     uint8_t *rx_buff = can_instance->rx_buff;

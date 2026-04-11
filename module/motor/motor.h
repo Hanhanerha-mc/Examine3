@@ -2,6 +2,7 @@
 #define _MOTOR_H_
 
 #include "bsp_can.h"
+#include "bsp.h"
 #include "pid.h"
 #include <stdint.h>
 #include <sys/types.h>
@@ -91,6 +92,10 @@ typedef struct
 
 MotorInstance *MotorInit(Motor_Init_Config_s *motor_config);
 MotorInstance *Motor_init_and_grouping(Motor_Init_Config_s *motor_config, uint8_t id);
+
+void MotorWorkClose(MotorInstance *instance);
+void MotorModeSwitch(MotorInstance *instance, Motor_control_mode_e mode);
+void MotorSetSpeed(MotorInstance *instance, float ref);
 
 // typedef struct
 // {
