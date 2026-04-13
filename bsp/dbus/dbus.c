@@ -7,6 +7,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+/*进行Init即可，其他无需干涉，数据会存储到DBUS_Data结构体中*/
+
+
 static DBUS_Data_s DBUS_Data = {0, 0, 0, 0, 0, 0, 0};
 uint8_t DBUS_rxbuff[DBUS_BUFLEN];// 接收缓冲区
 

@@ -49,7 +49,7 @@ CANInstance *CANRegister(CAN_Init_Config_s *config)
 static void CANAddFilter(CANInstance *_instance)
 {
     // 1. 定义CAN过滤器配置结构体
-    CAN_FilterTypeDef can_filter_conf;
+    CAN_FilterTypeDef can_filter_conf = {0};
     
     // 2. 静态变量，用于跟踪过滤器索引
     //    0-13号过滤器给CAN1使用，14-27号过滤器给CAN2使用
@@ -63,9 +63,9 @@ static void CANAddFilter(CANInstance *_instance)
     //    只有低16位有效
     can_filter_conf.FilterScale = CAN_FILTERSCALE_16BIT;
     
-    // 5. 根据TX ID的奇偶性分配FIFO
+    // 5. 根据RX ID的奇偶性分配FIFO
     //    奇数ID的模块会被分配到FIFO0，偶数ID的模块会被分配到FIFO1
-    can_filter_conf.FilterFIFOAssignment = (_instance->tx_id & 1) ? CAN_RX_FIFO0 : CAN_RX_FIFO1;
+    can_filter_conf.FilterFIFOAssignment = (_instance->rx_id & 1) ? CAN_RX_FIFO0 : CAN_RX_FIFO1;
     
     // 6. 设置从机过滤器起始银行
     //    在STM32的BxCAN控制器中，CAN2是CAN1的从机，从第14个过滤器开始

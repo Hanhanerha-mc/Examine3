@@ -1,0 +1,1281 @@
+C620
+Brushless DC Motor Speed Controller
+User Guide 使用说明 ユーザーガイド V1.0 2017.09
+
+Disclaimer
+Thank you for purchasing the RoboMaster C620 Brushless DC Motor Speed Controller (hereinafter referred to as “product”). Read this disclaimer carefully before using this product. By using this product, you hereby agree to this disclaimer and signify that you have read it fully. Install and use this product in strict accordance with the User Guide. SZ DJI TECHNOLOGY CO., LTD. and its affiliated companies assume no liability for damage(s) or injuries incurred directly or indirectly from using, installing or modifying this product improperly, including but not limited to using non-designated accessories.
+DJITM is a trademark of SZ DJI TECHNOLOGY CO., LTD. (abbreviated as “DJI”) and its affiliated companies. Names of products, brands, etc., appearing in this document are trademarks or registered trademarks of their respective owner companies. This product and document are copyrighted by DJI with all rights reserved. No part of this product or document shall be reproduced in any form without the prior written consent or authorization of DJI.
+The final interpretation rights of this disclaimer is owned by DJI.
+Warning
+1. Make sure that there are no short circuits and all the cables are correctly connected when using the speed controller.
+ 2
+
+2. The speed controller will heat when the output power is too high. Please handle carefully to avoid scalding.
+3. Ensure that all parts are in good condition. Replace them when necessary.
+4. The input signal mode (PWM signal or CAN bus communication) cannot be changed while the product is in use. Power off the product to set the signal mode and restart to apply a new mode.
+5. Be sure to use the product in strict accordance with the specifications (voltage, current, temperature, etc.) listed in this document. Failure to do so may reduce the product service life or even lead to permanent damage.
+Introduction
+Using a 32-bit motor driver chip and FieldOriented Control (FOC), the RoboMaster C620 Brushless DC Motor Speed Controller enables precise control over motor torque. It is compatible with the M3508 P19 Brushless DC Gear Motor* to create a complete propulsion system. Users can configure and update speed controller firmware using RoboMaster Assistant.
+* Please refer to the M3508 P19 Brushless DC Gear Motor User Guide for detailed information of this product.
+Features
+• Two Signal Modes 50-500Hz PWM (Pulse Width Modulation) signal CAN bus communication
+3 
+
+• Maximum Continuous Current: 20 A • Quick Setup to assign ID numbers to all speed
+controllers connected to the bus wire • Feedback of motor temperature, rotor position
+and rotational speed via CAN bus communication • No need for position sensor calibration when
+changing motors
+Information about rotor position and rotational speed can only be obtained when using CAN bus communication. Please use the CAN bus cable reasonably while take its bandwidth into consideration.
+
+In the Box
+C620 Speed Controller ×1
+
+PWM Cable×1
+
+CAN Cable ×1
+
+7-Pin Cable ×1
+
+Overview
+C620 Brushless DC Motor Speed Controller
+ 4
+
+[1] 7-Pin Port Connects to M3508 for data exchange.
+[2] 3-Phase Power Cable Connects to the 3-phase cable of the M3508. Ensure the cables are securely connected with the corresponding colors correctly matched.
+[3] Termination Resistance Switch Switch to connect/disconnect the 120Ω termination resistance, according to CAN bus wiring and relevant regulations.
+[4] SET Button Configures the speed controller. Refer to “Using the SET Button” for detailed information.
+[5] Power Cable Connects to a 24 V power supply via an XT30 power connector.
+[6] Status LED Indicates the speed controller’s operating status. Refer to “Status LED” for details.
+[7] CAN Port Receives the CAN controlling signal of the control panel. The bitrate of the CAN bus is 1 Mbps.
+5 
+
+[8] PWM Port Receives the PWM signal via a PWM cable. Connect to a DJI TAKYONTM Updater (or a compatible USB to serial converter) to your computer with the provided PWM cable to configure speed controller parameters or update its firmware via RoboMaster Assistant.
+• DO NOT plug in the CAN cable and the PWM cable simultaneously, as the motor may lose control. Make sure to power off the speed controller when switching the signal mode.
+• The DJI Takyon Updater should be purchased separately at the DJI online store. Refer to Takyon Updater User Guide for more information.
+PWM Cable
+A
+B C A: GND (Black) B: TX (Grey) C: PWM/RX (White)
+CAN Cable
+A
+B
+A: CAN_L (Black) B:CAN_H (Red)
+ 6
+
+Connecting the Speed Controller
+Using CAN Cable 1. Connect the 7-pin ports of the speed controller
+and M3508 with the 7-pin cable. 2. Connect the 3-phase cable of the speed
+controller to that of the M3508. Ensure the cables are securely connected with the corresponding colors correctly matched. 3. Insert one end of the CAN cable into the CAN port of the speed controller and the other end to any compatible equipment. 4. Connect to a power supply.
+
+7-Pin Cable
+
+CAN Cable
+
+Power Supply Port
+
+3-Phase Cable
+
+Using PWM Cable 1. Connect the 7-pin ports of the speed controller
+and M3508 with the 7-pin cable. 2. Connect the 3-phase cable of the speed
+controller to that of the M3508. Ensure the cables are securely connected with the corresponding colors correctly matched. 3. Insert one end of the PWM cable into the PWM port on the speed controller and the other end to any compatible equipment. 4. Connect to a power supply.
+7 
+
+Power Supply Port
+
+7-Pin Cable
+
+PWM Cable
+
+3-Phase Cable
+
+Mounting the Speed Controller Refer to the dimensions below to mount the
+speed controller to a robot or mobile platform.
+
+Top View
+
+25.80 18
+
+Side View
+
+11.50
+
+2.00 Mounting Holes: 4 × 2.0
+Unit: mm
+The speed controller is outfitted with mounting holes of a diameter of 2.0. Use appropriately sized screws to mount properly and avoid damage.
+ 8
+
+Using RoboMaster Assistant
+Configure the speed controller or update its
+firmware using a Takyon Updater (see below),
+or a compatible USB to serial converter via
+RoboMaster Assistant.
+
+Speed Controller Takyon Updater
+
+PC
+
+1. Download RoboMaster Assistant from the RoboMaster official website. www.robomaster.com/zh-CN/equipment/M3508
+2. Connect the speed controller to the Takyon Updater using the PWM cable, and then connect the Takyon Updater to a computer. Make sure the PWM cable is correctly connected; Black for GND (-), grey for TX (+) and white for PWM/RX ( ).
+3. Connect the speed controller to a power supply.
+4. Launch the RoboMaster Assistant and check if the speed controller is successfully connected to your computer.
+5. Click Settings to adjust parameters. 6. Click Firmware Update and select the version
+you would like for the speed controller. RoboMaster Assistant will automatically download and update the firmware.
+If RoboMaster Assistant does not recognize the speed controller, check:
+
+9 
+
+if there is more than one FTDI device connected, such as another DJI Updater or program, an FTDI USB adapter, or development board (e.g., a BeagleBone, Raspberry, Arduino board). Unplug the FTDI devices. Restart RoboMaster Assistant and the speed controller, and try again.
+
+Status LED
+The chart below describes the blinking patterns of the speed controller’s operating status LED. In situations that indicate warning and abnormal working conditions, the LED will only indicate the abnormal one. And in situations that indicate multiple warning or abnormal working conditions, the LED will only indicate the one with the least amount of blinks. Please note that the speed controller will automatically cut off the output stream when it is in abnormal status.
+
+Normal
+Blinks green 1-8 times every second
+Quick ID Setting Solid orange Motor Position Sensor Calibration
+Blinks green quickly
+
+Description The number of blinks indicate the current ID of the speed controller. Description Quick ID setting starts
+Description
+The motor position sensor is being calibrated.
+
+  10
+
+PWM Calibration
+
+Description
+
+Solid Green
+
+PWM signal is being calibrated
+
+Blinks orange quickly Calibration fails
+
+Warning
+
+Description
+
+Blinks orange once every second
+
+The temperature of motor is higher than or equal to 257° F (125° C)*.
+
+Blinks orange twice every second
+
+More than one speed controller share the same ID connected to the CAN bus.
+
+Blinks orange three PWM output is not at the times every second minimum
+
+Abnormal
+
+Description
+
+Solid Red
+
+Storage chip can not be accessed via 7-Pin cable or using incompatible motor (only check when powering on the speed controller).
+
+Blinks red once every second
+
+The voltage of the speed controller power supply is too high (only check when powering on the speed controller).
+
+Blinks red twice every second
+
+The 3-phase cable is not connected.
+
+Blinks red three times every second
+
+Motor position sensor data lost. Check that the 7-pin cable is connected correctly.
+
+ 11
+
+Blinks red four times every second
+Blinks red quickly
+
+The temperature of the motor is abnormal or too high, higher than or equal to 356°F (180° F).
+Motor calibration fails
+
+* Temperature protection can be turned on/off via RoboMaster Assistant. The status LED will blink to warn and the output will be cut off when the motor temperature excesses 257° F if the temperature protection is activated. The status LED will not blink and the output will not be cut off when the motor temperature is between 257° F and 356° F if the temperature protection is inactivated.
+
+Using the SET Button 1. Separate ID Setting Follow the steps below to assign a unique ID to each speed controller (supported ID range is 1-8): a. Press the SET button once to activate separate
+ID assignment mode when the speed controller is working. The status LED will be off at that time. b. Press the SET button again to assign an ID to each speed controller. The number of times you press the SET button (no more than eight times) is the ID number of the speed controller. The status LED will blink orange once for each successful press of the button. c. If the SET button is idle for three seconds, the speed controller will automatically save the ID number entered. Turn off the speed controller and turn on again after assigning the ID.
+  12
+
+Multiple speed controllers connected to the same CAN bus** cannot share the same ID number. Any speed controllers with the same ID number will indicate a warning and cut off the output stream.
+2. Quick ID Setting Follow the steps below to quickly assign ID numbers to all speed controllers (eight maximum) connected to CAN bus**. a. Ensure all speed controllers are working
+normally. Press the SET button on any speed controller speed controller once to activate separate ID assignment mode and then press and hold that SET button again until all the status LEDs turn solid green. All the speed controllers will assign ID numbers. b. Turn each M3508 rotor manually (at least 180° in either direction) from first to last order of your choice. The ID number of each corresponding speed controller will be assigned, from one to eight (i.e., the first rotated motor means that its speed controller will have an ID of 1). Turn off the speed controllers and turn on again after assigning ID numbers.
+If the M3508 rotor is not turned and fails to assign ID numbers to the speed controller, it will save the original ID number after powering on.
+** Ensure to correctly connect or disconnect the terminal resistance based on CAN Bus wiring
+ 13
+
+standard, or the CAN BUS Communication may not work properly which leads to failure of those features.
+3. M3508 Calibration For better performance and a smoother compatibility, please calibrate the M3508 after changing it or a speed controller. After the speed controller and M3508 are successfully connected and powered on, follow the steps below to calibrate the motor’s position sensor: a. Press and hold the SET button and release
+when the status LED blinks green quickly. b. The motor will begin calibration and complete
+when successful.
+The motors will continue to rotate during calibration. DO NOT touch. It is recommend to calibrate the motors without payload. If calibration fails several times, replace the motor.
+CAN Communication Protocol 1. Speed Controller Receiving Message Format The two identifiers (0x200 and 0x1FF) control the current output of each of the four speed controllers by ID numbers. The controllable current range is -16384 ~ 0 ~ 16384. The corresponding speed controller output torque current range is -20 ~ 0 ~ 20 A.
+Identifier: 0x200	    Frame format: DATA Frame type: Standard    DLC: 8 Bytes
+  14
+
+Data Fields
+
+Description
+
+Speed Controller ID
+
+Controls the current DATA[0] value in higher order
+byte (8 bits) 1
+Controls the current DATA[1] value in lower order
+byte (8 bits)
+
+Controls the current DATA[2] value in higher order
+byte (8 bits) 2
+Controls the current DATA[3] value in lower order
+byte (8 bits)
+
+Controls the current DATA[4] value in higher order
+byte (8 bits) 3
+Controls the current DATA[5] value in lower order
+byte (8 bits)
+
+Controls the current DATA[6] value in higher order
+byte (8 bits) 4
+Controls the current DATA[7] value in lower order
+byte (8 bits)
+
+Identifier: 0x1FF	   Frame format: DATA Frame type: Standard    DLC: 8 Bytes
+
+ 15
+
+Data Fields DATA[0] DATA[1] DATA[2] DATA[3] DATA[4] DATA[5] DATA[6] DATA[7]
+
+Description
+
+Speed Controller ID
+
+Controls the current value in higher order byte (8 bits)
+5 Controls the current value in lower order byte (8 bits)
+
+Controls the current value in higher order byte (8 bits)
+6 Controls the current value in lower order byte (8 bits)
+
+Controls the current value in higher order byte (8 bits)
+7 Controls the current value in lower order byte (8 bits)
+
+Controls the current value in higher order byte (8 bits)
+8 Controls the current value in lower order byte (8 bits)
+
+2. Speed Controller Sending Message Format The format in which the speed controller sends feedback data to the CAN bus.
+Identifier is determined by 0x200 + speed controller ID (e.g., if the speed controller ID is 1, then the identifier of that speed controller is 0×201)
+  16
+
+Frame type: Standard  Frame format: DATA DLC: 8 Bytes
+
+Data Fields
+
+Description
+
+DATA[0]
+
+Controls the rotor mechanical angle in higher order byte (8 bits)
+
+DATA[1]
+
+Controls the rotor mechanical angle in lower order byte (8 bits)
+
+DATA[2]
+
+Controls the rotational speed in higher order byte (8 bits)
+
+DATA[3]
+
+Controls the rotational speed in lower order byte (8 bits)
+
+DATA[4]
+
+Actual torque current in higher order byte (8 bits)
+
+DATA[5]
+
+Actual torque current in lower order byte (8 bits)
+
+DATA[6]
+
+Motor temperature
+
+DATA[7]
+
+Null
+
+Sending frequency		 1KHz by default (can be changed inside RoboMaster Assistant) Rotor mechanical angle value range 0 ~ 8191 (corresponding mechanical angle range: 0 ~ 360°) Expressed rotor speed value unit rpm Expressed motor temperature unit ℃
+
+PWM Signal Description
+1. PWM Signal Control Modes In one-way rotation mode, the diagram below shows the mapping between PWM pulse width and speed. At this time, the PWM signal can only rotate the motor in one direction.
+ 17
+
+Speed ( rpm ) V max
+
+0 1000 1080
+
+1500
+
+1920 2000
+
+Pulse Width ( us )
+
+In two-way rotation mode, the diagram below describes the mapping between PWM pulse width and speed. In the first section, the speed controlled by pulse width decreases from the maximum speed in reverse to zero, and then accelerates from zero to max in a positive direction.
+
+Speed ( rpm )
+V max
+
+0 1080 1000
+V max
+
+1480 1500 1520
+
+1920 2000
+
+Pulse Width ( us )
+
+The default positive direction is counterclockwise to the rotation of the motor output shaft. Configure parameters related to PWM signal and calibrate the PWM signal inside RoboMaster Assistant.
+
+2. PWM Signal Range Calibration When the input signal is set to be PWM (50 to 500Hz), its pulse width (1000 to 2000us) can be calibrated.
+  18
+
+a. Connect the speed controller and a PWM equipment via the provided PWM cable.
+b. Adjust the pulse width to the maximum and power on the speed controller and the motor. The PWM signal range calibration starts with the status LED being solid green.
+c. Adjust the pulse width to the minimum within 3 seconds. The speed controller will work normally if calibration successes with the status LED being green; If calibration fails, the status LED will blink orange quickly.
+
+Performance Diagram
+The following data displays the performance of
+the M3508 P19 Brushless DC Gear Motor and
+was generated using the C620:
+
+n(rpm) η(%)
+
+I(A) P(W)
+
+450
+
+80
+
+16 250
+
+400
+
+70 n
+
+350
+
+60
+
+300
+
+50
+
+η
+
+250 200 150
+
+40 30
+
+100
+
+20
+
+50
+
+10
+
+P
+
+I
+
+14
+
+12
+
+200
+
+10 150
+
+8
+
+6
+
+100
+
+4
+
+50
+
+2
+
+0
+
+0
+
+0
+
+0
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+T(N·m)
+
+η – Electrical Efficiency, T – Thrust, I – Current, P – Output Power, n – Rotational Speed
+
+The data above was measured in a laboratory setting with an input voltage of 24 V, at a temperature of 25°C and under well-ventilated conditions. These figures should be used for reference only. Make sure to use the speed controller properly, depending on the actual temperature and cooling conditions.
+ 19
+
+Specifications
+
+Rated Voltage
+
+24 V
+
+Max Allowable Current* 20 A (continuous)
+
+Max PWM Input Signal 50 to 500 Hz Frequency
+
+CAN Bus Bitrate
+
+1 Mbps
+
+Weight
+
+35 g
+
+Dimensions
+
+49.4×25.8×11.5 mm (LWH)
+
+Operating Temperature Range
+
+32 to 122° F (0 to 50° C)
+
+* Tested at a temperature of 25° C in wellventilated laboratory conditions.
+
+  20
+
+免责声明
+感谢您购买 RoboMasterTM C620 无刷电机调速 器（以下简称电调）。在使用之前，请仔细阅读 本声明，一旦使用，即被视为对本声明全部内容 的认可和接受。请严格遵守手册、产品说明和相 关的法律法规、政策、准则安装和使用该产品。 在使用产品过程中，用户承诺对自己的行为及因 此而产生的所有后果负责。因用户不当使用、安 装、改装造成的任何损失，DJITM 将不承担法律 责任。
+DJI 是深圳市大疆 TM 创新科技有限公司及其关联 公司的商标。本文出现的产品名称、品牌等，均 为其所属公司的商标。本产品及手册为大疆创新 版权所有。未经许可，不得以任何形式复制翻印。
+关于免责声明的最终解释权，归大疆创新所有。
+产品使用注意事项
+1. 确保电路无短路、接口按照要求正确连接。 2. 电调大功率输出时，会出现发热的情况，请小
+心使用，避免烫伤。 3. 使用前请检查各零部件是否完好。如有部件老
+化或损坏，请更换新部件。 4. 两种可选控制方式在电调运行过程中不可更
+改。如需切换，请切断电调电源，然后再进行 更改。 5. 请严格按照本文规定的工作环境（如电压、电 流、温度等参数）使用，否则将会影响产品寿 命或造成永久性损坏。
+简介
+C620 电调采用 32 位定制电机驱动芯片，使用
+ 21
+
+磁 场 定 向 控 制（FOC） 技 术， 实 现 对 电 机 转 矩 的精确控制，与 M3508 直流无刷减速电机 * 搭 配，组成强大的动力套件。可配合 RoboMaster Assistant 调参软件进行参数设置并升级固件。
+产品特性
+• 支持两种可选控制方式 50-500Hz 的 PWM（脉宽调制）信号控制 CAN 总线指令控制
+• 最高支持 20A 的持续电流 • 支持对 CAN 总线上的电调快速设置 ID • 支持通过 CAN 总线获取电机温度、转子位置
+和转子转速等信息 • 切换电机时可无需进行位置传感器参数校准
+* M3508 直流无刷减速电机的使用请参见《M3508 直流无刷减速电机使用说明》
+  22
+
+物品清单
+C620 电调 ×1
+
+PWM 信号线 ×1
+
+CAN 信号线 ×1
+
+7-Pin 数据线 ×1
+
+接口及线序说明 电调接口
+
+[1] 7-Pin 电机数据端口 连接 M3508 直流无刷减速电机进行数据交互。
+[2] 三相动力线接头 与 M3508 直流无刷减速电机的三相输入接头 相连接，连接时请确保电调与电机连线正确 （相同颜色的接线匹配连接，并且保证不可 逆接头正确匹配连接），切勿接错。
+ 23
+
+[3] CAN 终端电阻选择开关 通过拨动开关至 ON/OFF 位置，可接入 / 断 开 120Ω 终端电阻（用户可参阅 CAN 总线布 线和终端电阻选择的相关规范，选择终端电 阻是否接入）。
+[4] SET 按键 对电调进行配置，详见“SET 按键操作”。
+[5] 电源线 连接电源（额定电压 24V）为 C620 电调供电， 电源线插头兼容 XT30。
+[6] 指示灯 指示当前电调的工作状态，详见“指示灯描 述”。
+[7] CAN 信号端口 通 过 CAN 信 号 线 连 接 该 端 口， 接 收 控 制 板 的 CAN 控 制 指 令，CAN 总 线 比 特 率 为 1Mbps。
+[8] PWM 信号端口 通过 PWM 信号线连接该端口，接收 PWM 信 号。另外，也可使用 PWM 信号线连接该端 口和 TAKYONTM 电调升级器（也可使用其它 适配的 USB 转串口工具）到 PC，然后通过 RoboMaster Assistant 调参软件对电调进行 固件升级及参数设置。
+• 不允许同时接入 CAN 信号端口和 PWM 信号端口，否则会造成电机控制失常。 如需切换控制信号，请在电调切断电源 的状态下切换。
+• 用户需自行前往 DJI 官方商城购买 DJI Takyon 升级器，其详细使用说明请参 见《Takyon 电调升级器使用说明》。
+  24
+
+PWM 信号线线序
+A
+B C
+从上到下依次为：A 黑色（GND），B 灰色（TX） 及 C 白色（PWM/RX）。
+CAN 信号线线序
+A
+B
+从 上 到 下 依 次 为：A 黑 色（CAN_L） 和 B 红 色 （CAN_H）。
+安装连接 通过 CAN 信号线控制的连接方法
+1. 用 7-Pin 数据线分别插入电调和电机的 7-Pin 数据端口，连接电调和电机。
+2. 将电机的三相输入接头与电调三相动力线接头 相连接，连接时请确保电调与电机连线正确（相 同颜色的接线匹配连接，并且保证不可逆接头 正确匹配连接），切勿接错。
+3. 将 CAN 信号线一头接入 CAN 信号端口，另 一头接入目标接口。
+4. 连接电源线至电源为电调进行供电。
+ 25
+
+CAN信号线 连接电源
+
+7-Pin数据线 三相动力线
+
+通过 PWM 信号线控制的连接方法
+1. 用 7-Pin 数据线分别插入电调和电机的 7-Pin 数据端口，连接电调和电机。
+2. 将电机的三相输入接头与电调三相动力线接头 相连接，连接时请确保电调与电机连线正确（相 同颜色的接线匹配进行连接，并且保证不可逆 接头正确匹配），切勿接错。
+3. 将 PWM 信号线一头接入电调 PWM 通信端口， 另一头接入目标接口。
+4. 连接电源线至电源为电调进行供电。
+
+连接电源
+
+7-Pin数据线
+
+PWM信号线
+
+三相动力线
+
+安装
+请参考电调安装孔尺寸将电调安装至合适位置。
+  26
+
+主
+
+侧
+
+视
+
+视
+
+图
+
+图
+
+25.80
+
+18
+
+11.50
+
+2.00 安装孔： 4 × 2.0
+单位：mm
+电调上的安装孔为∅ 2.0，请选择合适的 螺丝安装电调。
+使用调参软件
+使用 Takyon 电调升级器（或其它 USB 转串口工 具），连接电调至计算机，以使用 RoboMaster Assistant 对电调进行参数设置或固件升级。下 面以使用 Takyon 电调升级器为例进行说明。
+
+电调 Takyon 电调升级器 计算机
+1. 从 RoboMaster 官网下载并运行 RoboMaster Assistant 调参软件。 www.robomaster.com/zh-CN/equipment/M3508
+2. 将电调 PWM 信号线接入 Takyon 电调升级器 一端的接口，电调的 PWM 信号线的黑色为地 线（-）， 灰 色 为 电 调 发 送 端（+）， 白 色 为 电调接收端（ ），请按照线序进行连接，
+ 27
+
+注意不要接错。然后使用 Micro USB 线连接 Takyon 电调升级器与计算机。 3. 连接电源为电调供电，设置完成前切勿切断电 源或断开连接。 4. 运 行 RoboMaster Assistant 调 参 软 件。 软 件 界面显示已连接设备，表示电调与软件已连接 并能正常通信。 5. 使 用 RoboMaster Assistant 调 参 软 件 的 设 置 界面进行基本参数的设置。 6. 点击固件升级按钮进行相应的固件版本升级， RoboMaster Assistant 调参软件将自行下载并 升级固件。
+若 RoboMaster Assistant 调 参 软 件 无 法 识别电调（未显示已连接设备）： 请检查计算机是否接有多个 DJI Takyon 升级器、DJI 升级器、FTDI USB 适配器 或 其 他 可 能 使 用 到 FTDI 芯 片 组 的 开 发 工 具（ 包 括 但 不 限 于：BeagleBone、 Raspberry、Arduino 等 ）。 如 果 是， 请断开其他 FTDI 设备，仅保留一个 DJI Takyon 电调升级器，然后重新为电调供 电，再重启软件，即可恢复正常。
+指示灯描述
+请根据电调指示灯状态判断电调工作情况。当警 告及异常情况同时出现时，电调指示灯仅指示异 常状态。若同时存在多个警告或异常状态，电调 状态指示灯将对闪烁次数最少的状态进行提示。 在异常状态下，电调将关闭输出。
+  28
+
+正常状态
+
+描述
+
+绿灯每隔 1 秒闪 N 次
+
+当前电调的 ID 为 N，电 调 ID 范围为 1 到 8
+
+快速设置 ID 状态 描述
+
+橙灯常亮
+
+当前电调处于快速设置 ID 状态
+
+电机位置传感器 参数校准状态
+
+描述
+
+绿灯快闪
+
+当前电机处于位置传感 器参数校准模式
+
+PWM 信号校准状态 描述
+
+绿灯常亮
+
+PWM 信号校准中
+
+橙灯快闪
+
+PWM 信号校准失败
+
+警告状态
+
+描述
+
+橙灯每隔 1 秒闪 1 次 电机温度过热 (≥125℃ )*
+
+橙灯每隔 1 秒闪 2 次 总线上有相同 ID 的设备
+
+橙灯每隔 1 秒闪 3 次 PWM 输入不在最小值
+
+异常状态
+
+描述
+
+红灯常亮
+
+无法通过 7-Pin 数据线 访问电机中的存储芯片， 或电机不匹配（仅开机 自检）
+
+红灯每隔 1 秒闪 1 次
+
+电调供电电压过高（仅 开机自检）
+
+红灯每隔 1 秒闪 2 次 电机三相线未接入
+
+与电机相连的 7-Pin 数 红灯每隔 1 秒闪 3 次 据线中位置传感器数据
+丢失
+
+ 29
+
+红灯每隔 1 秒闪 4 次
+
+电机温度异常或过高 ( ≥180℃ )
+
+红灯快闪
+
+电机位置传感器参数校 准失败
+
+* 可 在 RoboMaster Assistant 中 选 择 开 启 / 关 闭温度保护。若开启温度保护，电机温度超过 125℃，指示灯指示并关闭输出。若关闭温度 保护，电机温度超过 125℃小于 180℃，指示 灯不提示也不关闭输出。
+
+SET 按键操作
+1. 独立设置 ID 用户对单个 C620 电调进行 ID（支持范围 1-8） 设置，具体操作如下： a. 电调正常工作状态下，短按 1 次 SET 按键，
+进入独立设置 ID 模式，此时指示灯熄灭。 b. 在独立设置 ID 模式下，短按 SET 按键的次数
+（不超过 8 次）即为设置的 ID 号。每次有效 短按，指示灯将橙灯闪烁 1 次。 c. 若 3 秒未对 SET 按键进行操作，电调将自动 保存当前设置 ID 号。设置完 ID 的电调需要重 新上电才能进入正常工作状态。
+同一总线 ** 上不能出现 ID 重复的情况， 否则 ID 冲突的电调将提示警告、关闭输出。
+
+2. 快速设置 ID 用户对总线 ** 上的所有 C620 电调（不超过 8 个） 进行快速编号，具体操作如下： a. 正常工作状态下，对总线上任意 1 个 C620 电
+调的 SET 按键进行 1 次短按，进入独立 ID 设 置模式后，再长按 SET 按键，此时总线上的
+  30
+
+所有电调将进入快速设置 ID 模式，所有电调 指示灯为橙灯常亮。 b. 按照预设 ID 依次手动转动 C620 电调对应的 M3508 直流无刷减速电机的转子（任意方向 至少旋转半圈以上），电调会按照转动顺序自 动从 1 依次开始编号，编号完成的电调需重 新上电才能进入正常工作状态。
+该模式下未设置 ID 的电机（未转动转子） 重新上电后会保持原有 ID。
+3. 电机校准 更换电机或电调后，为获得更好的电机适配参数， 可运行电机校准程序。电调电机连接并接通电源 后，用户通过对电机的位置传感器参数进行校准， 以发挥电调的最佳性能，具体操作如下： a. 长按 SET 按键，直至指示灯变为绿灯快闪，
+释放 SET 按键。 b. 电机进入自动校准模式，待校准完成后自动退
+出校准模式。
+电机校准时会转动，切勿触碰，建议在空 载下进行该操作。若多次校准失败，请更 换电机。
+** 请 注 意 按 照 CAN 总 线 布 线 和 终 端 电 阻 选 择 的规范正确选择接入或断开终端电阻，以免 CAN 总线通信无法正常工作，导致以上功能 无法正常使用。
+CAN 通信协议
+1. 电调接收报文格式 用于向电调发送控制指令控制电调的电流 输 出， 两 个 标 识 符（0x200 和 0x1FF） 各 自
+ 31
+
+对 应 控 制 4 个 ID 的 电 调。 控 制 电 流 值 范 围 -16384~0~16384，对应电调输出的转矩电流范 围 -20~0~20A。
+
+标识符：0x200 帧类型：标准帧
+
+帧格式：DATA DLC：8 字节
+
+数据域 DATA[0] DATA[1] DATA[2] DATA[3] DATA[4] DATA[5] DATA[6] DATA[7]
+
+内容 控制电流值高 8 位 控制电流值低 8 位 控制电流值高 8 位 控制电流值低 8 位 控制电流值高 8 位 控制电流值低 8 位 控制电流值高 8 位 控制电流值低 8 位
+
+电调 ID 1 2 3 4
+
+标识符：0x1FF 帧类型：标准帧
+
+帧格式：DATA DLC：8 字节
+
+数据域 DATA[0] DATA[1] DATA[2] DATA[3] DATA[4] DATA[5] DATA[6] DATA[7]
+
+内容 控制电流值高 8 位 控制电流值低 8 位 控制电流值高 8 位 控制电流值低 8 位 控制电流值高 8 位 控制电流值低 8 位 控制电流值高 8 位 控制电流值低 8 位
+
+电调 ID 5 6 7 8
+
+  32
+
+2. 电调反馈报文格式 电调向总线上发送的反馈数据。
+
+标识符：0x200 + 电调 ID （如：ID 为 1，该标识符为 0x201）
+帧类型：标准帧
+帧格式：DATA DLC：8 字节
+
+数据域 DATA[0] DATA[1] DATA[2] DATA[3] DATA[4] DATA[5] DATA[6] DATA[7]
+
+内容 转子机械角度高 8 位 转子机械角度低 8 位
+转子转速高 8 位 转子转速低 8 位 实际转矩电流高 8 位 实际转矩电流低 8 位
+电机温度 Null
+
+发送频率：1KHz （默认值，可在 RoboMaster Assistant 软件中修改发送频率） 转子机械角度值范围：0 ~ 8191 （对应转子机械 角度为 0~360°） 转子转速值的单位为：RPM 电机温度的单位为：℃
+
+PWM 控制信号说明
+1. PWM 信号控制模式 单向转动模式下，PWM 的脉宽和速度的映射关 系如下，PWM 信号只能驱动电机单向运动。
+
+ 33
+
+速速度度（（rprmp）m） V max
+
+0 1000 1080
+
+1500
+
+1920 2000
+脉宽脉宽（（uuss））
+
+双向转动模式下，PWM 的脉宽和速度的映射关 系如下。PWM 分为两个部分，前半部分脉宽控 制速度从反向最大速度到 0，后半部分脉宽控制 速度从 0 到正向最大速度。
+
+速速度度（（rrppmm）） V max
+
+0 1080 1000
+V max
+
+1480 1500 1520
+
+1920 2000
+脉宽（us）
+
+其中，默认旋转正方向为电机输出轴逆时针旋转 方向，PWM 信号控制的相关参数，以及 PWM 信号校准可在 RoboMaster Assistant 调参软件中 设置。
+2. PWM 信号行程校准 输入信号为 PWM 信号（50-500Hz）时，用户可 以对 PWM 信号的脉宽行程（1000-2000us）进 行校准。 a. 使用 PWM 信号线将设备 PWM 输出信号与电
+调 PWM 信号接口相连。 b. 将 PWM 信号的脉宽设置到最大行程，电调与
+电机连接并上电。此时电调 LED 指示灯状态 为绿灯常亮。进入 PWM 信号行程校准状态。
+  34
+
+c. 在 3s 内将 PWM 信号的脉宽设置到最低行程， 若校准成功，电调进入正常模式以绿灯指示 ID 号；若校准失败，电调指示灯橙灯快闪。
+
+搭配 M3508 直流无刷减速电机时 的电机性能曲线
+
+n(rpm) η(%)
+
+I(A) P(W)
+
+450
+
+80
+
+16 250
+
+400
+
+70 n
+
+350
+
+60
+
+300
+
+50
+
+η
+
+250 200 150
+
+40 30
+
+100
+
+20
+
+P
+
+I
+
+14
+
+12
+
+200
+
+10 150
+
+8
+
+6
+
+100
+
+4
+
+50
+
+50
+
+10
+
+2
+
+0
+
+0
+
+0
+
+0
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+T(N·m)
+
+P- 输出功率，I- 电流，η- 效率 ，T- 扭矩，n- 转速
+
+以上数据均为输入电压 24V、在室温 25℃、通 风良好的实验环境下获得，仅供参考。实际使用 时，请根据工作环境温度、散热条件控制等实际 情况使用。
+
+产品规格
+
+额定电压
+
+24 V
+
+最大允许电流 *（持续） 20 A
+
+PWM 输入信号频率 50-500 Hz
+
+CAN 总线比特率
+
+1Mbps
+
+重量
+
+35 g
+
+尺寸
+
+49.4×25.8×11.5 mm
+
+工作环境温度范围
+
+0 至 50 ℃
+
+* 室温 25℃、通风良好的实验环境下测得。
+ 35
+
+໔੹ࣄ߲
+͜ ͷ ౓ ͸ RoboMaster C620 ϒ ϥ γ Ϩ ε ௚ ྲྀ Ϟʔλʔ଎౓ίϯτϩʔϥʔʢҎԼɺʮຊ੡඼ʯ ͱ͍͍·͢ʣΛ͓ങ্͍͍͖͛ͨͩ੣ʹ͋Γ͕ ͱ͏͍͟͝·͢ɻຊ੡඼ͷ͝࢖༻લʹɺ͜ͷ໔ ੹ࣄ߲ΛΑ͓͘ಡΈ͍ͩ͘͞ɻຊ੡඼Λ࢖༻͢ Δͱɺ͜ͷ໔੹ࣄ߲Λ͢΂ͯಡΈɺ͜Εʹಉҙ ͨ͠΋ͷͱΈͳ͞Ε·͢ɻຊ੡඼͸ɺϢʔβʔ ΨΠυʹ‫͞ࡌه‬Ε͍ͯΔͱ͓ΓʹऔΓ෇͚ͯ࢖ ༻͍ͯͩ͘͠͞ɻSZ DJI TECHNOLOGY CO., LTD. ͱͦͷؔ࿈ձࣾ͸ɺຊ੡඼͕ෆద੾ͳ࢖ ༻ɺऔΓ෇͚·ͨ͸վ଄ʢࢦఆ֎ͷΞΫηαϦʔ ͷ࢖༻ͳͲ͕‫·ؚ‬Ε·͢ʣʹΑΓɺ௚઀·ͨ͸ ؒ઀తͳ‫ݪ‬ҼͰੜͨ͡෺తଛ֐·ͨ͸ਓతඃ֐ ʹ͍͍͔ͭͯͳΔ੹೚΋ෛ͍·ͤΜɻ
+DJITM ͸ SZ DJI TECHNOLOGY CO., LTD.ʢ ུ ͯ͠ʮDJIʯʣ͓Αͼͦͷؔ࿈ձࣾͷ঎ඪͰ͢ɻ ຊॻʹ‫͞ࡌه‬Ε͍ͯΔ੡඼ɺϒϥϯυͳͲͷ໊ শ͸ɺͦͷॴ༗ऀͰ͋Δ֤ࣾͷ঎ඪ·ͨ͸ొ࿥ ঎ඪͰ͢ɻຊ੡඼͓Αͼຊॻ͸ɺෆ‫ڐ‬ෳ੡ɾ‫ې‬ ແஅసࡌΛ‫ݪ‬ଇͱ͢Δ DJI ͷஶ࡞෺ͷͨΊɺDJI ͔Βॻ໘ʹΑΔࣄલঝೝ·ͨ͸‫ڐ‬୚ΛಘΔ͜ͱ ͳ͘ԿΒ͔ͷ‫Ͱܗ‬ຊ੡඼·ͨ͸จॻͷ͍͔ͳΔ ෦෼΋ෳ੡͢Δ͜ͱ͸‫͡ې͘ݻ‬ΒΕ͍ͯ·͢ɻ ຊ໔੹ࣄ߲ͷ࠷ऴղऍ‫ݶݖ‬͸ DJI ͕༗͠·͢ɻ
+‫ࠂܯ‬
+1. ͜ͷ଎౓ίϯτϩʔϥʔΛ࢖༻͢Δࡍ͸ɺ୹ བྷ͕ͳ͘ɺ͢΂ͯͷέʔϒϧ͕ద੾ʹ઀ଓ͞ Ε͍ͯΔ͜ͱΛ֬ೝ͍ͯͩ͘͠͞ɻ
+  36
+
+2. ग़ྗిྗ͕ߴ͗͢Δͱ଎౓ίϯτϩʔϥʔ ͕ա೤͠·͢ɻ΍͚Ͳ͠ͳ͍Α͏ʹ஫ҙͯ͠ औΓѻ͍ͬͯͩ͘͞ɻ
+3. ͢΂ͯͷ෦඼͕ྑ޷ͳঢ়ଶʹ͋Δ͜ͱΛ֬ ೝ͍ͯͩ͘͠͞ɻඞཁʹԠ͡Ͱ෦඼Λަ‫͠׵‬ ͍ͯͩ͘͞ɻ
+4. ຊ੡඼ͷ࢖༻த͸ɺೖྗ৴߸ϞʔυʢPWM ৴߸·ͨ͸ CAN-BUS ௨৴ʣΛมߋͰ͖· ͤΜɻຊ੡඼ͷి‫ݯ‬ΛΦϑʹͯ͠৴߸Ϟʔ υΛઃఆ͠ɺ࠶࢝ಈ͢Δͱ৽͍͠Ϟʔυ͕ద ༻͞Ε·͢ɻ
+5. ຊ੡඼͸ɺ͜ͷॻྨʹ‫ࡌه‬ͷ֤࢓༷ʢిѹɺ ిྲྀɺԹ౓ͳͲʣΛ‫ݫ‬कͯ͠͝࢖༻͍ͩ͘͞ɻ ͦ͏͠ͳ͍ͱ੡඼ण໋͕୹͘ͳΓɺ·ͨ੡඼ ʹम෮ෆೳͳଛই͕ൃੜ͢Δ͓ͦΕ΋͋Γ ·͢ɻ
+͸͡Ίʹ
+RoboMaster C620 ϒϥγϨε௚ྲྀϞʔλʔ଎ ౓ίϯτϩʔϥʔͰ͸ɺ32 ϏοτͷϞʔλʔυ ϥΠόʔνοϓͱ࣓քํ޲੍‫ޚ‬ʢFOCʣΛ࢖༻ ͍ͯ͠ΔͷͰϞʔλʔτϧΫͷਫ਼ີ੍‫͕ޚ‬Մೳ Ͱ͢ɻຊ੡඼͸ M3508 P19 ϒϥγϨε௚ྲྀΪ ΞϞʔλʔ * ͱ‫׵ޓ‬ੑ͕͋Γɺ‫׬‬શͳਪਐγε ςϜΛߏஙͰ͖·͢ɻRoboMaster Assistant Ͱɺ ଎౓ίϯτϩʔϥʔͷϑΝʔϜ΢ΣΞͷߏ੒΍ ߋ৽ΛϢʔβʔࣗ਎Ͱߦͳ͏͜ͱ͕Ͱ͖·͢ɻ
+* ͜ͷ੡඼ͷৄࡉʹ͍ͭͯ͸ɺM3508 P19 ϒϥγ Ϩε௚ྲྀΪΞϞʔλʔϢʔβʔΨΠυΛࢀর͠ ͍ͯͩ͘͞ɻ
+ 37
+
+‫ػ‬ೳ
+• 2 ͭͷ৴߸Ϟʔυ 50 ʙ 500 Hz PWMʢύϧε෯มௐʣ৴߸ CAN-BUS ௨৴
+• ࠷େఆৗిྲྀɿ20 A • όεϫΠϠʔʹ઀ଓ͍ͯ͠Δ͢΂ͯͷ଎౓ίϯ
+τϩʔϥʔʹ ID ൪߸ΛׂΓ౰ͯΔΫΠοΫ ηοτΞοϓ • CAN-BUS ௨৴ʹΑΓɺϞʔλʔԹ౓ɺϩʔ λʔҐஔɺճస଎౓ΛϑΟʔυόοΫ • Ϟʔλʔมߋ࣌ͷҐஔηϯαʔͷΩϟϦϒ Ϩʔγϣϯෆཁ
+CAN-BUS ௨৴࢖༻࣌ʹͷΈɺϩʔλʔ Ґஔͱճస଎౓ͷ৘ใΛऔಘͰ͖·͢ɻ CAN-BUS έʔϒϧͷଳҬ෯Λߟྀ͠ͳ ͕Βɺద੾ʹ CAN-BUS έʔϒϧΛ࢖༻ ͍ͯͩ͘͠͞ɻ
+
+ಉࠝ෺
+C620 ଎౓ίϯτ ϩʔϥʔʷ 1
+
+PWM έʔϒϧʷ 1
+
+CAN έʔϒϧʷ 1
+
+7 ϐϯέʔϒϧʷ 1
+
+  38
+
+֓ཁ
+C620 ϒϥγϨε௚ྲྀϞʔλʔ଎౓ίϯτϩʔϥʔ
+[1] 7 ϐϯϙʔτ M3508 ʹ઀ଓͯ͠σʔλަ‫͢·͠༻࢖ʹ׵‬ɻ
+[2] ࡾ૬ి‫ݯ‬έʔϒϧ M3508 ͷࡾ૬έʔϒϧʹ઀ଓ͠·͢ɻରԠ ͢Δ৭͕ਖ਼͘͠߹͏Α͏ʹέʔϒϧΛͬ͠ ͔Γ઀ଓ͍ͯͩ͘͠͞ɻ
+[3] ऴ୺఍߅εΠον CAN-BUS ഑ઢ͓Αͼؔ࿈๏‫͍ͯͮجʹن‬ɺ 120 Њऴ୺఍߅΁ͷ઀ଓʗ੾அΛ੾Γସ͑ ·͢ɻ
+[4] SET Ϙλϯ ଎౓ίϯτϩʔϥʔΛઃఆ͠·͢ɻৄࡉ͸ ʮSET Ϙλϯͷ࢖͍ํʯΛࢀর͍ͯͩ͘͠͞ɻ
+[5] ి‫ݯ‬έʔϒϧ XT30 ి‫ݯ‬ίωΫλʔʹΑΓɺ24V ి‫઀ʹݯ‬ ଓ͠·͢ɻ
+[6] εςʔλε LED ଎౓ίϯτϩʔϥʔͷಈ࡞εςʔλεΛࣔ ͠·͢ɻৄࡉ͸ʮεςʔλε LEDʯΛࢀরɻ
+[7] CAN ϙʔτ ίϯτϩʔϧύωϧͷ CAN ੍‫ޚ‬৴߸Λड৴ ͠ · ͢ɻCAN-BUS ͷ Ϗ ο τ Ϩ ʔ τ ͸ 1Mbps Ͱ͢ɻ
+ 39
+
+[8] PWM ϙʔτ PWM έʔϒϧʹΑΓ PWM ৴߸Λड৴͠· ͢ɻ෇ଐͷ PWM έʔϒ ϧ Λ ࢖ ༻ ͠ ͯ DJI TAKYONTM Updaterʢ·ͨ͸௚ྻม‫ث׵‬ରԠ USBʣ ͱ ύ ι ί ϯ Λ ઀ ଓ ͠ɺRoboMaster Assistant Ͱ଎౓ίϯτϩʔϥʔͷύϥϝʔ λʔͷઃఆ΍ϑΝʔϜ΢ΣΞͷߋ৽Λߦͳ ͍·͢ɻ
+• CAN έʔϒϧͱ PWM έʔϒϧΛಉ࣌ ʹࠩ͠ࠐ·ͳ͍Ͱ͍ͩ͘͞ɻϞʔλʔ ͷ੍‫͕ޚ‬ෆೳʹͳΔ͓ͦΕ͕͋Γ· ͢ɻ৴߸ϞʔυΛ੾Γସ͑Δࡍ͸ɺඞ ͣ଎౓ίϯτϩʔϥʔͷి‫ݯ‬ΛΦϑʹ ͍ͯͩ͘͠͞ɻ
+• DJI Takyon Updater ͸ɺDJI ΦϯϥΠϯ ετΞͰผ్͓ങ͍‫ٻ‬Ί͍ͨͩ͘ඞཁ ͕͋Γ·͢ɻৄࡉ͸ɺTakyon Updater ͷϢʔβʔΨΠυΛࢀর͍ͯͩ͘͠͞ɻ
+PWM έʔϒϧ
+A
+B C
+AɿGNDʢࠇʣBɿTXʢάϨʔʣCɿPWM/RXʢനʣ
+
+CAN έʔϒϧ
+A
+B AɿCAN_LʢࠇʣBɿCAN_Hʢ੺ʣ
+
+  40
+
+଎౓ίϯτϩʔϥʔͷ઀ଓ CAN έʔϒϧͷ࢖͍ํ
+1. 7 ϐϯέʔϒϧͰɺ଎౓ίϯτϩʔϥʔͷ 7 ϐϯϙʔτͱ M3508 ͷ 7 ϐϯϙʔτΛ઀ଓ ͠·͢ɻ
+2. ଎ ౓ ί ϯ τ ϩ ʔ ϥ ʔ ͷ ࡾ ૬ έ ʔ ϒ ϧ Λ M3508 ͷࡾ૬έʔϒϧʹ઀ଓ͠·͢ɻରԠ ͢Δ৭͕ਖ਼͘͠߹͏Α͏ʹέʔϒϧΛͬ͠ ͔Γ઀ଓ͍ͯͩ͘͠͞ɻ
+3. CAN έʔϒϧͷยํͷ୺Λ଎౓ίϯτϩʔ ϥʔͷ CAN ϙʔτʹૠೖ͠ɺ΋͏Ұํͷ୺Λ ‫׵ޓ‬ੑͷ͋Δ‫઀ʹثػ‬ଓ͠·͢ɻ
+4. ి‫઀ʹݯ‬ଓ͠·͢ɻ
+
+CAN έʔϒϧ
+
+7 ϐϯέ ʔϒϧ
+
+ి‫ݯ‬ϙʔτ
+
+ࡾ૬έʔϒϧ
+
+PWM έʔϒϧͷ࢖͍ํ 1. 7 ϐϯέʔϒϧͰɺ଎౓ίϯτϩʔϥʔͷ 7
+ϐϯϙʔτͱ M3508 ͷ 7 ϐϯϙʔτΛ઀ଓ ͠·͢ɻ 2. ଎ ౓ ί ϯ τ ϩ ʔ ϥ ʔ ͷ ࡾ ૬ έ ʔ ϒ ϧ Λ M3508 ͷࡾ૬έʔϒϧʹ઀ଓ͠·͢ɻରԠ ͢Δ৭͕ਖ਼͘͠߹͏Α͏ʹέʔϒϧΛͬ͠ ͔Γ઀ଓ͍ͯͩ͘͠͞ɻ
+ 41
+
+3. PWM έʔϒϧͷยํͷ୺Λ଎౓ίϯτϩʔ ϥʔͷ PWM ϙʔτʹૠೖ͠ɺ΋͏Ұํͷ ୺Λ‫׵ޓ‬ੑͷ͋Δ‫઀ʹثػ‬ଓ͠·͢ɻ
+4. ి‫઀ʹݯ‬ଓ͠·͢ɻ
+
+ి‫ݯ‬ϙʔτ
+
+7ϐϯέ ʔϒϧ
+
+PWM έʔϒϧ
+
+ࡾ૬έʔϒϧ
+
+଎౓ίϯτϩʔϥʔͷऔΓ෇͚
+
+ҎԼͷੇ๏Λࢀরͯ͠ɺ଎౓ίϯτϩʔϥʔΛ
+
+ϩϘοτ·ͨ͸ϞόΠϧϓϥοτϑΥʔϜʹऔ
+
+Γ෇͚·͢ɻ
+
+্
+
+ଆ
+
+໘
+
+໘
+
+ਤ
+
+ਤ
+
+25.80
+
+18
+
+11.50
+
+2.00
+取り付け穴： 4 × 2.0
+
+୯Ґɿmm
+  42
+
+଎౓ίϯτϩʔϥʔʹ͸௚‫ ܘ‬2.0 ͷऔΓ ෇͚͕݀͋Γ·͢ɻద੾ͳωδΛ࢖༻͠ɺ औΓ෇͚͍ͯͩ͘͞ɻ
+RoboMaster Assistant ͷ࢖͍ํ
+Takyon UpdaterʢԼਤࢀরʣ·ͨ͸௚ྻม‫ث׵‬ ର Ԡ USB Λ ࢖ ༻ ͠ ͯɺRoboMaster Assistant Ͱ଎౓ίϯτϩʔϥʔͷઃఆ΍ϑΝʔϜ΢ΣΞ ͷߋ৽Λߦ͍·͢ɻ
+଎౓ίϯτϩʔϥʔ Takyon Updater PC
+1. RoboMaster ͷ ެ ࣜ ΢ Σ ϒ α Π τ ͔ Β RoboMaster AssistantΛμ΢ϯϩʔυ͠·͢ɻ www.robomaster.com/zh-CN/equipment/M3508
+2. PWM έ ʔ ϒ ϧ Ͱ ଎ ౓ ί ϯ τ ϩ ʔ ϥ ʔ ͱ Takyon Updater Λ ઀ ଓ ͠ ͯ ͔ ΒɺTakyon Updater Λ ί ϯ ϐ ϡ ʔ λ ʔ ʹ ઀ ଓ ͠ · ͢ɻ PMW έʔϒϧ͕ਖ਼͘͠઀ଓ͞Ε͍ͯΔ͜ ͱΛ֬ೝ͠·͢ɻࠇ͸ GNDʢ-ʣɺάϨʔ͸ TXʢ+ʣɺന͸ PWM/RXʢ ʣͰ͢ɻ
+3. ଎౓ίϯτϩʔϥʔΛి‫઀ʹݯ‬ଓ͠·͢ɻ 4. RoboMaster Assistant Λ‫ى‬ಈ͠ɺ଎౓ίϯτ
+ϩʔϥʔ͕ίϯϐϡʔλʔʹਖ਼ৗʹ઀ଓ͞Ε ͍ͯΔ͔Ͳ͏͔֬ೝ͠·͢ɻ 5.ʦઃఆʧΛΫϦοΫͯ͠ɺύϥϝʔλʔΛௐ ੔͠·͢ɻ 6.ʦϑΝʔϜ΢ΣΞͷߋ৽ʧΛΫϦοΫͯ͠ɺ ଎౓ίϯτϩʔϥʔ༻ͷόʔδϣϯΛબ୒
+ 43
+
+͠·͢ɻRoboMaster Assistant ʹΑΓϑΝʔ Ϝ΢ΣΞ͕ࣗಈతʹμ΢ϯϩʔυ͞Εɺߋ৽ ͞Ε·͢ɻ
+RoboMaster Assistant ͕଎౓ίϯτϩʔ ϥʔΛೝࣝ͠ͳ͍৔߹͸ɺҎԼͷ఺Λ֬ ೝ͍ͯͩ͘͠͞ɻ ผ ͷ DJI Updater ΍ ϓ ϩ ά ϥ ϜɺFTDI USB Ξ μ ϓ λ ʔɺ ։ ൃ Ϙ ʔ υʢ ྫɿ BeagleBoneɺRaspberryɺArduino Ϙ ʔ υʣͳͲͷ FTDI ‫͕ثػ‬ɺ2 ୆Ҏ্઀ଓ ͞Ε͍ͯͳ͍͔֬ೝ͠·͢ɻFTDI ‫ثػ‬Λ औΓ֎͠·͢ɻRoboMaster Assistant ͱ ଎౓ίϯτϩʔϥʔΛ࠶‫ى‬ಈ͠ɺ΋͏Ұ ౓࣮ߦ͠·͢ɻ
+
+εςʔλε LED
+Լද͸ɺ଎౓ίϯτϩʔϥʔͷಈ࡞εςʔλε LED ͷ఺໓ύλʔϯҰཡͰ͢ɻ‫ͱࠂܯ‬ҟৗ͕ಉ ࣌ʹൃੜͨ͠ঢ়‫Ͱگ‬͸ɺLED ͸ҟৗঢ়ଶͷΈΛ දࣔ͠·͢ɻෳ਺ͷ‫ࠂܯ‬΍ҟৗ͕ൃੜͨ͠ঢ়‫گ‬ Ͱ͸ɺLED ͸࠷΋఺໓ྔͷগͳ͍߲໨͚ͩΛද ࣔ͠·͢ɻ଎౓ίϯτϩʔϥʔ͸ɺҟৗεςʔ λεʹͳͬͨ৔߹͸ࣗಈతʹग़ྗετϦʔϜΛ ੾அ͠·͢ɻ
+
+௨ৗ
+྘৭ʹ఺໓ 1 ʙ 8 ճʗඵ
+ΫΠοΫ ID ઃఆ ΦϨϯδ৭఺౮
+
+આ໌ ఺໓ճ਺͸‫ࡏݱ‬ͷ଎౓ί ϯτϩʔϥʔ ID Λද͠ ·͢ આ໌ ΫΠοΫ ID ઃఆ։࢝
+  44
+
+ϞʔλʔҐஔηϯα ʔͷΩϟϦϒϨ ʔγϣϯ ͢͹΍͘྘৭ʹ఺໓ PMW ͷΩϟϦ ϒϨʔγϣϯ ྘৭఺౮ ͢͹΍͘ΦϨ ϯδ৭ʹ఺໓ ‫ࠂܯ‬ ΦϨϯδ৭ʹ ຖඵ 1 ճ఺໓ ΦϨϯδ৭ʹ ຖඵ 2 ճ఺໓ ΦϨϯδ৭ʹ ຖඵ 3 ճ఺໓ ҟৗ
+੺৭఺౮
+੺৭ʹຖඵ 1 ճ఺໓
+
+આ໌
+ϞʔλʔҐஔηϯαʔͷ ΩϟϦϒϨʔγϣϯத
+આ໌
+PWM ৴߸ͷΩϟϦϒϨ ʔγϣϯத
+ΩϟϦϒϨʔγϣϯࣦഊ
+આ໌ ϞʔλʔͷԹ౓͕ 125ˆ Ҏ্Ͱ͢ * ෳ਺ͷ଎౓ίϯτϩʔϥ ʔ͕ಉҰͷ ID Ͱ CANBUS ʹ઀ଓ͞Ε͍ͯ·͢ PWM ͷग़ྗ͕࠷௿஋Λ ຬ͍ͨͯ͠·ͤΜ આ໌ 7 ϐϯέʔϒϧ‫ܦ‬༝ɺ· ͨ͸ඇରԠϞʔλʔΛ࢖ ༻ͯ͠ετϨʔδνοϓ ʹΞΫηε͢Δ͜ͱ͸Ͱ ͖·ͤΜʢ଎౓ίϯτϩ ʔϥʔͷి‫ݯ‬౤ೖ࣌ͷΈ ֬ೝʣ ଎౓ίϯτϩʔϥʔͷి ‫ݯ‬ͷిѹ͕ߴ͗͢·͢ ʢ଎౓ίϯτϩʔϥʔͷ ి‫ݯ‬౤ೖ࣌ͷΈ֬ೝʣ
+
+ 45
+
+੺৭ʹຖඵ 2 ճ఺໓ ੺৭ʹຖඵ 3 ճ఺໓ ੺৭ʹຖඵ 4 ճ఺໓ ͢͹΍͘੺৭ʹ఺໓
+
+ࡾ૬έʔϒϧ͕઀ଓ͞Ε ͍ͯ·ͤΜ
+ϞʔλʔҐஔηϯαʔͷ σʔλ͕ফࣦ͠·ͨ͠ɻ 7 ϐϯέʔϒϧ͕ਖ਼͘͠ ઀ଓ͞Ε͍ͯΔ͔֬ೝ͠ ͍ͯͩ͘͞
+ϞʔλʔͷԹ౓͕ҟৗ ͔ɺ·ͨ͸ߴ͗͢·͢ ʢ180ˆҎ্ʣ
+ϞʔλʔͷΩϟϦϒϨʔ γϣϯʹࣦഊ͠·ͨ͠
+
+* Թ౓อ‫ޢ‬͸ RoboMaster Assistant ʹΑΓΦϯ ʗΦϑΛ੾Γସ͑Δ͜ͱ͕Ͱ͖·͢ɻԹ౓อ ‫͕ޢ‬༗ޮʹͳ͍ͬͯΔ৔߹ɺϞʔλʔԹ౓͕ 125ˆΛ௒͑Δͱεςʔλε LED ͕఺໓ͯ͠ ‫͠ࠂܯ‬ɺग़ྗΛःஅ͠·͢ɻԹ౓อ‫͕ޢ‬ແޮ ʹͳ͍ͬͯΔ৔߹ɺϞʔλʔԹ౓͕ 125 ʙ 180ˆͰ͸εςʔλε LED ͸఺໓ͤͣɺग़ྗ ͸ःஅ͞Ε·ͤΜɻ
+
+SET Ϙλϯͷ࢖͍ํ 1. ‫ݸ‬ผ ID ઃఆ ҎԼͷखॱʹै͍ɺ֤଎౓ίϯτϩʔϥʔʹ‫ݸ‬ ผͷ ID ΛׂΓ౰ͯ·͢ʢରԠ ID ൣғ͸ 1 ʙ 8ʣɻ a. ଎౓ίϯτϩʔϥʔ࡞ಈதʹɺSET ϘλϯΛ
+1 ճԡͯ͠‫ݸ‬ผ ID ׂΓ౰ͯϞʔυΛ༗ޮʹ ͠·͢ɻ͜ͷͱ͖ɺεςʔλε LED ͸Φϑ ʹͳΓ·͢ɻ b. SET ϘλϯΛ΋͏Ұ౓ԡͯ͠ɺ֤଎౓ίϯ τ ϩ ʔ ϥ ʔ ʹ ID Λ ׂ Γ ౰ ͯ · ͢ɻSET Ϙ λϯΛԡ͢ճ਺ʢ8 ճҎԼʣ͕ɺ଎౓ίϯτ
+  46
+
+ϩʔϥʔͷ ID ൪߸Ͱ͢ɻϘλϯΛԡ͢༗ޮ ճ਺͝ͱʹεςʔλε LED ͕ΦϨϯδ৭ʹ 1 ճ఺໓͠·͢ɻ c. SET Ϙλϯ͕ 3 ඵؒૢ࡞͞Εͳ͍ͱɺ଎౓ ίϯτϩʔϥʔ͕ೖྗ ID ൪߸ΛࣗಈͰอଘ ͠ · ͢ɻID ׂ Γ ౰ ͯ ‫ ʹ ޙ‬଎ ౓ ί ϯ τ ϩ ʔ ϥʔΛΦϑʹ͔ͯ͠Β࠶ͼΦϯʹ͠·͢ɻ
+ಉҰ CAN-BUS** ʹ઀ଓ͞Ε͍ͯΔ଎౓ ίϯτϩʔϥʔ͸ɺಉҰͷ ID ൪߸Λ‫ڞ‬ ༗Ͱ͖·ͤΜɻID ൪߸͕ಉҰͷ͢΂ͯ ͷ଎౓ίϯτϩʔϥʔʹ‫͕ࠂܯ‬දࣔ͞ Εɺग़ྗετϦʔϜ͕ःஅ͞Ε·͢ɻ
+2. ΫΠοΫ ID ઃఆ ҎԼͷखॱͰɺCAN-BUS** ʹ઀ଓ͞Ε͍ͯΔ ͢΂ͯͷ଎౓ίϯτϩʔϥʔʢ࠷େ 8 ‫ج‬ʣʹɺ ID ൪߸Λ͢͹΍ׂ͘Γ౰ͯΔ͜ͱ͕Ͱ͖·͢ɻ a. ͢΂ͯͷ଎౓ίϯτϩʔϥʔ͕ਖ਼ৗʹ࡞ಈ͠
+͍ͯΔ͜ͱΛ֬ೝ͠·͢ɻ͍ͣΕ͔ͷ଎౓ ίϯτϩʔϥʔͰ SET ϘλϯΛ 1 ճԡ͠ɺ‫ݸ‬ ผ ID ׂΓ౰ͯϞʔυΛ༗ޮʹ͠·͢ɻͦͷ‫ޙ‬ɺ ͢΂ͯͷ଎౓ίϯτϩʔϥʔͷεςʔλε LED ͕྘৭ʹ఺౮͢Δ·ͰɺSET ϘλϯΛ΋ ͏Ұ౓௕ԡ͠͠·͢ɻ͢΂ͯͷ଎౓ίϯτ ϩʔϥʔʹ ID ൪߸ׂ͕Γ౰ͯΒΕ·͢ɻ b. ೚ҙͷॱংͰɺ֤ M3508 ϩʔλʔΛ͍ͣΕ ͔ͷํ޲ʹ 180˃Ҏ্खಈͰճ͠·͢ɻରԠ ͢Δ֤଎౓ίϯτϩʔϥʔʹ 1 ʙ 8 ͷ ID ൪ ߸ׂ͕Γ౰ͯΒΕ·͢ʢ࠷ॳʹճసͨ͠Ϟʔ λʔͷ଎౓ίϯτϩʔϥʔʹ͸ 1 ൪ͷ ID ͕ ઃఆ͞Ε·͢ʣɻID ൪߸ׂΓ౰ͯ‫ʹޙ‬ɺ଎౓ ίϯτϩʔϥʔΛΦϑʹ͔ͯ͠Β࠶ͼΦϯ ʹ͠·͢ɻ
+ 47
+
+M3508 ϩʔλʔΛճసͤͣɺ଎౓ίϯ τϩʔϥʔ΁ͷ ID ൪߸ͷׂΓ౰ͯʹࣦ ഊͨ͠৔߹͸ɺి‫ݯ‬౤ೖ‫ݩʹޙ‬ͷ ID ൪ ߸͕อଘ͞Ε·͢ɻ
+** CAN-Bus ഑ઢ‫͖ͮجʹ֨ن‬ɺඞͣऴ୺఍߅Λ ਖ਼ ͠ ͘ ઀ ଓ · ͨ ͸ ੾ அ ͠ ͯ ͘ ͩ ͞ ͍ɻCAN BUS ௨৴͕ਖ਼͘͠ߦΘΕͣɺ͜ΕΒͷ‫ػ‬ೳ ͕ಇ͔ͳ͘ͳΔ‫ڪ‬Ε͕͋Γ·͢ɻ
+3.M3508 ͷΩϟϦϒϨʔγϣϯ M3508 ·ͨ͸଎౓ίϯτϩʔϥʔΛަ‫ͨ͠׵‬ ‫ʹޙ‬͸ɺྑ޷ͳύϑΥʔϚϯεͱΑΓεϜʔζ ͳ‫ؒثػ‬ͷ࿈‫ܞ‬Λ࣮‫͢ݱ‬ΔͨΊɺM3508 ΛΩϟ ϦϒϨʔγϣϯ͍ͯͩ͘͠͞ɻ଎౓ίϯτϩʔ ϥʔͱ M3508 ͷ઀ଓ͕ਖ਼ৗʹ‫ͨྃ͠׬‬ΒɺҎ ԼͷखॱʹैͬͯϞʔλʔͷҐஔηϯαʔΛ ΩϟϦϒϨʔγϣϯ͠·͢ɻ a. SET ϘλϯΛ௕ԡ͠͠ɺLED ͕྘৭ʹૉૣ
+͘఺໓ͨ͠Β཭͠·͢ɻ b. Ϟʔλʔ͕ΩϟϦϒϨʔγϣϯΛ։࢝͠ɺਖ਼
+ৗʹऴྃ͢Δͱఀࢭ͠·͢ɻ
+Ω ϟ Ϧ ϒ Ϩ ʔ γ ϣ ϯ தɺ Ϟ ʔ λ ʔ ͸ ճ సΛଓ͚·͢ɻϞʔλʔʹ৮Βͳ͍Ͱ͘ ͍ͩ͞ɻ ϖΠϩʔυͳ͠ͰϞʔλʔΛΩϟϦϒ Ϩ ʔ γ ϣ ϯ ͢ Δ ͜ ͱ Λ ͓ ‫ ק‬Ί ͠ · ͢ɻ ΩϟϦϒϨʔγϣϯʹԿ౓΋ࣦഊ͢Δ৔ ߹͸ɺϞʔλʔΛަ‫͍ͩͯ͘͞͠׵‬ɻ
+  48
+
+CAN ௨৴ϓϩτίϧ 1. ଎౓ίϯτϩʔϥʔ͕ड৴͢Δϝοηʔδ
+‫ ࣜܗ‬2 ͭͷࣝผࢠʢ0x200 ͱ 0x1FFʣ͕ɺID ൪߸ʹΑΓ 4 ‫ج‬ͷ଎౓ίϯτϩʔϥʔͷ֤ ిྲྀग़ྗΛ੍‫͢·͠ޚ‬ɻ੍‫ޚ‬Մೳͳిྲྀൣғ ͸ -16384 ʙ 0 ʙ 16384 Ͱ͢ɻରԠ͢Δ଎౓ ίϯτϩʔϥʔͷग़ྗτϧΫిྲྀൣғ͸ -20 ʙ 0 ʙ 20 A Ͱ͢ɻ
+
+ࣝผࢠɿ0x200
+
+ϑϨʔϜ‫ࣜܗ‬ɿDATA
+
+ϑϨʔϜλΠϓɿඪ४ DLCɿ8 όΠτ
+
+σʔλϑ Οʔϧυ DATA[0] DATA[1] DATA[2] DATA[3] DATA[4] DATA[5] DATA[6] DATA[7]
+
+આ໌
+্ҐόΠτʢ8 Ϗο τʣͷిྲྀ஋Λ੍‫ޚ‬
+ԼҐόΠτʢ8 Ϗο τʣͷిྲྀ஋Λ੍‫ޚ‬
+্ҐόΠτʢ8 Ϗο τʣͷిྲྀ஋Λ੍‫ޚ‬
+ԼҐόΠτʢ8 Ϗο τʣͷిྲྀ஋Λ੍‫ޚ‬
+্ҐόΠτʢ8 Ϗο τʣͷిྲྀ஋Λ੍‫ޚ‬
+ԼҐόΠτʢ8 Ϗο τʣͷిྲྀ஋Λ੍‫ޚ‬
+্ҐόΠτʢ8 Ϗο τʣͷిྲྀ஋Λ੍‫ޚ‬
+ԼҐόΠτʢ8 Ϗο τʣͷిྲྀ஋Λ੍‫ޚ‬
+
+଎౓ίϯτ ϩʔϥʔ ID
+1
+2
+3
+4
+
+ 49
+
+ࣝผࢠɿ0x1FF
+
+ϑϨʔϜ‫ࣜܗ‬ɿDATA
+
+ϑϨʔϜλΠϓɿඪ४ DLCɿ8 όΠτ
+
+σʔλϑ Οʔϧυ DATA[0] DATA[1] DATA[2] DATA[3] DATA[4] DATA[5] DATA[6] DATA[7]
+
+આ໌
+্ҐόΠτʢ8 Ϗο τʣͷిྲྀ஋Λ੍‫ޚ‬
+ԼҐόΠτʢ8 Ϗο τʣͷిྲྀ஋Λ੍‫ޚ‬
+্ҐόΠτʢ8 Ϗο τʣͷిྲྀ஋Λ੍‫ޚ‬
+ԼҐόΠτʢ8 Ϗο τʣͷిྲྀ஋Λ੍‫ޚ‬
+্ҐόΠτʢ8 Ϗο τʣͷిྲྀ஋Λ੍‫ޚ‬
+ԼҐόΠτʢ8 Ϗο τʣͷిྲྀ஋Λ੍‫ޚ‬
+্ҐόΠτʢ8 Ϗο τʣͷిྲྀ஋Λ੍‫ޚ‬
+ԼҐόΠτʢ8 Ϗο τʣͷిྲྀ஋Λ੍‫ޚ‬
+
+଎౓ίϯτ ϩʔϥʔ ID
+5
+6
+7
+8
+
+2. ଎౓ίϯτϩʔϥʔ͕ૹ৴͢Δϝοηʔδ ‫ ࣜ ܗ‬଎ ౓ ί ϯ τ ϩ ʔ ϥ ʔ ͕ CAN-BUS ʹ ϑΟʔυόοΫσʔλΛૹ৴͢Δ‫͢Ͱࣜܗ‬ɻ
+ࣝผࢠ͸ɺ0x200 + ଎౓ίϯτϩʔϥʔ ID ͱ ͳΓ·͢ʢͨͱ͑͹଎౓ίϯτϩʔϥʔ ID ͕ 1 ͷ৔߹ɺͦͷ଎౓ίϯτϩʔϥʔͷࣝผࢠ͸ 0 ʷ 201ʣɻ ϑϨʔϜλΠϓɿඪ४ ϑϨʔϜ‫ࣜܗ‬ɿDATA DLCɿ8 όΠτ
+
+  50
+
+σʔλϑ Οʔϧυ DATA[0]
+DATA[1]
+DATA[2]
+DATA[3]
+DATA[4]
+DATA[5] DATA[6] DATA[7]
+
+આ໌
+্ҐόΠτʢ8 Ϗοτʣͷϩʔλ ʔͷ‫ػ‬ցత֯౓Λ੍‫ޚ‬ ԼҐόΠτʢ8 Ϗοτʣͷϩʔλ ʔͷ‫ػ‬ցత֯౓Λ੍‫ޚ‬ ্ҐόΠτ (8 Ϗοτ ) ͷճస଎ ౓Λ੍‫ޚ‬ ԼҐόΠτ (8 Ϗοτ ) ͷճస଎ ౓Λ੍‫ޚ‬ ্ҐόΠτʢ8 Ϗοτʣͷ࣮ࡍͷ τϧΫిྲྀ ԼҐόΠτʢ8 Ϗοτʣͷ࣮ࡍͷ τϧΫిྲྀ
+ϞʔλʔͷԹ౓ ͳ͠
+
+ૹ৴प೾਺ σϑΥϧτͰ͸ 1 KHzʢRoboMaster Assistant ಺ͰมߋՄೳʣ ϩʔλʔͷ‫ػ‬ցత֯౓஋ͷൣғ͸ 0 ʙ 8191ʢର Ԡ͢Δ‫ػ‬ցత֯౓ൣғɿ0 ʙ 360˃ʣ දࣔ͞ΕΔϩʔλʔ଎౓஋ͷ୯Ґ͸ rpm දࣔ͞ΕΔϩʔλʔԹ౓ͷ୯Ґ͸ˆ
+
+PWM ৴߸ʹ͍ͭͯ
+1.PWM ৴߸੍‫ޚ‬Ϟʔυ Լ ͷ ά ϥ ϑ ͸ɺ Ұ ํ ޲ ճ స Ϟ ʔ υ ʹ ͓ ͚ Δ PWM ύϧε෯ͱ଎౓ؒͷϚοϐϯάΛࣔͯ͠ ͍·͢ɻ͜ͷ৔߹ɺPWM ৴߸͕ϞʔλʔΛճ సͤ͞ΒΕΔͷ͸Ұํ޲ͷΈͰ͢ɻ
+ 51
+
+଎౓ʢrpmʣ V max
+
+0 1000 1080
+
+1500
+
+1920 2000
+ύϧε෯ʢusʣ
+
+Լ ͷ ά ϥ ϑ ͸ɺ ૒ ํ ޲ ճ స Ϟ ʔ υ ʹ ͓ ͚ Δ PWM ύϧε෯ͱ଎౓ؒͷϚοϐϯάΛࣔͯ͠ ͍·͢ɻ࠷ॳͷηΫγϣϯͰ͸ɺύϧε෯ʹΑͬ ੍ͯ‫͞ޚ‬Ε͍ͯΔ଎౓͸࠷େ஋͔Βθϩ·Ͱ‫ٯ‬ ํ޲ʹ‫ݮ‬଎͠ɺͦͷ‫ޙ‬ɺਖ਼ͷ޲͖ʹθϩ͔Β࠷ େ஋·ͰՃ଎͠·͢ɻ
+଎౓ʢrpmʣ
+V max
+
+0
+
+1080 1000
+
+V max
+
+1480 1500 1520
+
+1920 2000
+
+ύϧε෯ʢusʣ
+
+σϑΥϧτͷਖ਼ͷ޲͖͸ɺϞʔλʔͷग़ྗγϟ ϑ τ ͷ ճ స ʹ ର ͠ ͯ ൓ ࣌ ‫ ܭ‬ճ Γ Ͱ ͢ɻ RoboMaster Assistant ಺Ͱ PWM ৴߸ؔ࿈ͷύ ϥϝʔλʔΛઃఆ͠ɺPWM ৴߸ΛΩϟϦϒϨʔ γϣϯ͍ͯͩ͘͠͞ɻ
+
+2.PWM ৴߸ൣғͷΩϟϦϒϨʔγϣϯ ೖྗ৴߸͕ PWMʢ50 ʙ 500 Hzʣʹઃఆ͞Ε ͯ ͍ Δ ৔ ߹ɺ ͦ ͷ ύ ϧ ε ෯ʢ1000 ʙ 2000 usʣΛΩϟϦϒϨʔγϣϯͰ͖·͢ɻ
+  52
+
+a. ଎౓ίϯτϩʔϥʔͱ PWM ૷ஔΛ෇ଐͷ PWM έʔϒϧͰ઀ଓ͠·͢ɻ
+b. ύϧε෯Λ࠷େ஋ʹௐઅ͠ɺ଎౓ίϯτϩʔ ϥʔͱϞʔλʔͷి‫ݯ‬ΛΦϯʹ͠·͢ɻε ςʔλε LED ͕྘৭ʹ఺౮͠ɺPWM ৴߸ൣ ғͷΩϟϦϒϨʔγϣϯ͕։࢝͠·͢ɻ
+c. 3 ඵҎ಺ʹύϧε෯Λ࠷খ஋ʹௐઅ͠·͢ɻ εςʔλε LED ͕྘৭ʹ఺౮͠ɺΩϟϦϒ Ϩʔγϣϯ͕ਖ਼ৗʹऴྃͨ͠৔߹ɺ଎౓ίϯ τϩʔϥʔ͕ਖ਼ৗʹ࡞ಈ͠·͢ɻΩϟϦϒ Ϩʔγϣϯʹࣦഊͨ͠৔߹͸ɺεςʔλε LED ͕ΦϨϯδ৭ʹૉૣ͘఺໓͠·͢ɻ
+
+ੑೳάϥϑ
+C620 Ͱੜ੒ͨ͠ M3508 P19 ϒϥγϨε௚ྲྀΪ
+ΞϞʔλʔͷੑೳσʔλ͸ҎԼͷͱ͓ΓͰ͢ɻ
+
+n(rpm) η(%)
+
+I(A) P(W)
+
+450
+
+80
+
+16 250
+
+400
+
+70 n
+
+350
+
+60
+
+300
+
+50
+
+η
+
+P
+
+I
+
+14
+
+12
+
+200
+
+10 150
+
+250 200 150
+
+40 30
+
+100
+
+20
+
+8
+
+6
+
+100
+
+4
+
+50
+
+50
+
+10
+
+2
+
+0
+
+0
+
+0
+
+0
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+T(N·m)
+
+η – ి‫཰ޮؾ‬ɺT – εϥετɺI – ిྲྀɺ P – ग़ྗɺn – ճస଎౓
+
+্‫ه‬ͷσʔλ͸ɺೖྗిѹ 24 Vɺ‫ؾ‬Թ 25 ˆͷ ‫ࣨݧ࣮ͳ޷ྑؾ׵‬৚݅ԼͰͷଌఆ஋Ͱ͢ɻ͜Ε Βͷ਺஋͸ࢀߟ஋Ͱ͢ɻ࣮ࡍͷ‫ؾ‬Թ΍ྫྷ٫৚݅ ʹԠͯ͡ɺ଎౓ίϯτϩʔϥʔΛద੾ʹ࢖༻͠ ͍ͯͩ͘͞ɻ
+ 53
+
+࢓༷
+
+ఆ֨ిѹ ࠷େ‫ڐ‬༰ిྲྀ * ʢ࿈ଓʣ PWM ࠷େೖྗ ৴߸प೾਺ CAN-BUS Ϗο τϨʔτ ॏྔ ੇ๏ (LWHʣ ಈ࡞‫ڥ؀‬Թ౓
+
+24 V 20 A
+50 ʙ 500 Hz
+1Mbps 35 g 49.4 ʷ 25.8 ʷ 11.5mm 0 ʙ 50ˆ
+
+* ‫ؾ‬Թ 25ˆͷ‫ࣨݧ࣮ͳ޷ྑؾ׵‬৚݅ԼͰͷଌ ఆ஋ɻ
+
+  54
+
+FCC Compliance
+This device complies with Part 15 of the FCC Rules. Operation is subject to the following two conditions: (1) This device may not cause harmful interference, and (2) This device must accept any interference received, including interference that may cause undesired operation. Any changes or modifications not expressly approved by the party responsible for compliance could void the user’s authority to operate the equipment.
+EU Compliance Statement SZ DJI TECHNOLOGY CO., LTD. hereby declares that this device is in compliance with the essential requirements and other relevant provisions of the Directive 2014/30/EU. A copy of the EU Declaration of Conformity is available online at www.dji.com/euro-compliance
+EU contact address: DJI GmbH, Industriestrasse. 12, 97618, Niederlauer, Germany
+Environmentally friendly disposal Old electrical appliances must not be disposed of together with the residual waste, but have to be disposed of separately. The disposal at the
+communal collecting point via private persons
+ 55
+
+is for free. The owner of old appliances is responsible to bring the appliances to these collecting points or to similar collection points. With this little personal effort, you contribute to recycle valuable raw materials and the treatment of toxic substances. IC Compliance This device complies with ICES-003 standard. Operation is subject to the following two conditions: (1) this device may not cause interference, and (2) this device must accept any interference, including interference that may cause undesired operation of the device.
+  56
+
+WWW.ROBOMASTER.COM
+
+and
+
+are trademarks of DJI.
+
+Copyright © 2017 DJI All Rights Reserved.
+
+Printed in China.
+
+

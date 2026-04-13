@@ -35,7 +35,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "bsp.h"
+#include "robot_task.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -121,6 +122,7 @@ int main(void)
   MX_CRC_Init();
   MX_DAC_Init();
   /* USER CODE BEGIN 2 */
+  TaskInit();
 
   /* USER CODE END 2 */
 

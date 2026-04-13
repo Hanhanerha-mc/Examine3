@@ -19,10 +19,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "dbus.h"
 #include "stm32f4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "dbus.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -230,6 +230,7 @@ void DMA1_Stream1_IRQHandler(void)
   /* USER CODE BEGIN DMA1_Stream1_IRQn 0 */
 
   /* USER CODE END DMA1_Stream1_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart3_rx);
   /* USER CODE BEGIN DMA1_Stream1_IRQn 1 */
 
   /* USER CODE END DMA1_Stream1_IRQn 1 */
@@ -243,6 +244,7 @@ void DMA1_Stream2_IRQHandler(void)
   /* USER CODE BEGIN DMA1_Stream2_IRQn 0 */
 
   /* USER CODE END DMA1_Stream2_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_i2c2_rx);
   /* USER CODE BEGIN DMA1_Stream2_IRQn 1 */
 
   /* USER CODE END DMA1_Stream2_IRQn 1 */
@@ -382,6 +384,8 @@ void TIM8_TRG_COM_TIM14_IRQHandler(void)
   /* USER CODE BEGIN TIM8_TRG_COM_TIM14_IRQn 0 */
 
   /* USER CODE END TIM8_TRG_COM_TIM14_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim8);
+  HAL_TIM_IRQHandler(&htim14);
   /* USER CODE BEGIN TIM8_TRG_COM_TIM14_IRQn 1 */
 
   /* USER CODE END TIM8_TRG_COM_TIM14_IRQn 1 */
@@ -395,6 +399,7 @@ void DMA1_Stream7_IRQHandler(void)
   /* USER CODE BEGIN DMA1_Stream7_IRQn 0 */
 
   /* USER CODE END DMA1_Stream7_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_i2c2_tx);
   /* USER CODE BEGIN DMA1_Stream7_IRQn 1 */
 
   /* USER CODE END DMA1_Stream7_IRQn 1 */
@@ -408,6 +413,7 @@ void DMA2_Stream0_IRQHandler(void)
   /* USER CODE BEGIN DMA2_Stream0_IRQn 0 */
 
   /* USER CODE END DMA2_Stream0_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_spi1_rx);
   /* USER CODE BEGIN DMA2_Stream0_IRQn 1 */
 
   /* USER CODE END DMA2_Stream0_IRQn 1 */
@@ -421,6 +427,7 @@ void DMA2_Stream2_IRQHandler(void)
   /* USER CODE BEGIN DMA2_Stream2_IRQn 0 */
 
   /* USER CODE END DMA2_Stream2_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart6_rx);
   /* USER CODE BEGIN DMA2_Stream2_IRQn 1 */
 
   /* USER CODE END DMA2_Stream2_IRQn 1 */
@@ -434,6 +441,7 @@ void DMA2_Stream3_IRQHandler(void)
   /* USER CODE BEGIN DMA2_Stream3_IRQn 0 */
 
   /* USER CODE END DMA2_Stream3_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_spi1_tx);
   /* USER CODE BEGIN DMA2_Stream3_IRQn 1 */
 
   /* USER CODE END DMA2_Stream3_IRQn 1 */
@@ -475,6 +483,7 @@ void OTG_FS_IRQHandler(void)
   /* USER CODE BEGIN OTG_FS_IRQn 0 */
 
   /* USER CODE END OTG_FS_IRQn 0 */
+  HAL_PCD_IRQHandler(&hpcd_USB_OTG_FS);
   /* USER CODE BEGIN OTG_FS_IRQn 1 */
 
   /* USER CODE END OTG_FS_IRQn 1 */
@@ -488,6 +497,7 @@ void DMA2_Stream5_IRQHandler(void)
   /* USER CODE BEGIN DMA2_Stream5_IRQn 0 */
 
   /* USER CODE END DMA2_Stream5_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart1_rx);
   /* USER CODE BEGIN DMA2_Stream5_IRQn 1 */
 
   /* USER CODE END DMA2_Stream5_IRQn 1 */
@@ -501,6 +511,7 @@ void DMA2_Stream6_IRQHandler(void)
   /* USER CODE BEGIN DMA2_Stream6_IRQn 0 */
 
   /* USER CODE END DMA2_Stream6_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart6_tx);
   /* USER CODE BEGIN DMA2_Stream6_IRQn 1 */
 
   /* USER CODE END DMA2_Stream6_IRQn 1 */
@@ -514,6 +525,7 @@ void DMA2_Stream7_IRQHandler(void)
   /* USER CODE BEGIN DMA2_Stream7_IRQn 0 */
 
   /* USER CODE END DMA2_Stream7_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart1_tx);
   /* USER CODE BEGIN DMA2_Stream7_IRQn 1 */
 
   /* USER CODE END DMA2_Stream7_IRQn 1 */

@@ -24,6 +24,7 @@ typedef struct
     uint8_t sw2; // 开关2
 } DBUS_Data_s;
 
+void DBUS_Init();
 void uart_receive_handler(UART_HandleTypeDef *huart);
 
 #endif

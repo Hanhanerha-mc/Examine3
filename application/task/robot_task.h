@@ -3,4 +3,6 @@
 
 #include "bsp.h"
 
+void TaskInit();
+
 #endif

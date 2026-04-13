@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define MAX_SPEED_REF 3.0f
+#define MAX_SPEED_REF 100.0f
 
 static uint8_t idx = 0;                                           // 电机实例索引
 static MotorInstance *motorInstance[MAX_MOTOR_CNT] = {NULL};        // 电机实例指针数组
@@ -114,6 +114,7 @@ MotorInstance *Motor_init_and_grouping(Motor_Init_Config_s *motor_config, uint8_
 void MotorContorl(void)
 {
     // 检索各个电机
+    if (idx == 0) return; // 如果没有电机实例，直接返回
     for (uint8_t i = 0; i < idx; i++) {
         MotorInstance *instance = motorInstance[i];            // 获取电机实例指针
         Motor_Measure_s *measure = &(instance->measure);       // 获取电机测量数据指针 (需要取地址)
@@ -123,25 +124,29 @@ void MotorContorl(void)
         switch (instance->control_mode) {
             case ANGLE_CONTROL:
                 PIDInstance *angle_pid = instance->angle_pid;       //  直接保存一次指针引用从而减小访存的开销
-                angle_pid->err[1] = angle_pid->err[0] = 0;
-                angle_pid->err[0] = measure->total_angle - ref; // 计算角度误差
+                // angle_pid->err[1] = angle_pid->err[0];
+                // angle_pid->err[0] = measure->total_angle - ref; // 计算角度误差
+                angle_pid->ref = ref;
+                angle_pid->fdb = measure->total_angle;
                 PID_calc(angle_pid);              // 计算PID输出，更新控制指令
                 ref = angle_pid->out;   // 将角度PID的输出作为速度PID的反馈输入 
             case SPEED_CONTROL:
             case STOP_CONTROL:
-                speed_pid->err[1] = speed_pid->err[0] = 0;
-                speed_pid->err[0] = measure->speed_aps - ref; // 计算速度误差
+                // speed_pid->err[1] = speed_pid->err[0];
+                // speed_pid->err[0] = measure->speed_aps - ref; // 计算速度误差
+                speed_pid->ref = ref;
+                speed_pid->fdb = measure->speed_aps;
                 PID_calc(speed_pid);              // 计算PID输出，更新控制指令
                 break;
         }
-        uint16_t current_cmd = (uint16_t)speed_pid->out; // 获取速度PID的输出作为最终控制指令
-        can_motorSend_list[instance->sender_group].tx_buff[instance->message_id] = (current_cmd >> 8) & 0xFF; // 将控制指令打包到CAN发送缓冲区
-        can_motorSend_list[instance->sender_group].tx_buff[instance->message_id + 1] = current_cmd & 0xFF; // 将控制指令打包到CAN发送缓冲区
+        int16_t current_cmd = (int16_t)speed_pid->out; // DJI电机电流指令为有符号16位
+        can_motorSend_list[instance->sender_group].tx_buff[(instance->message_id - 1) * 2] = (current_cmd >> 8) & 0xFF; // 将控制指令打包到CAN发送缓冲区
+        can_motorSend_list[instance->sender_group].tx_buff[instance->message_id * 2 - 1] = current_cmd & 0xFF; // 将控制指令打包到CAN发送缓冲区
     }
 
     // 发送控制指令到电机
     for (uint8_t i = 0; i < 4; i++) {
-        if (motorGroup[i]) CANTransmit(&can_motorSend_list[i], 1);  // 发送控制指令到电机，设置10ms超时时间
+        if (motorGroup[i]) CANTransmit(&can_motorSend_list[i], 10);  // 发送控制指令到电机，设置10ms超时时间
     }
 }
 
