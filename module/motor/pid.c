@@ -1,6 +1,7 @@
 #include "pid.h"
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 PIDInstance *PID_init(PID_Init_Config_s *config)
 {
@@ -12,8 +13,10 @@ PIDInstance *PID_init(PID_Init_Config_s *config)
     instance->kp = config->kp;
     instance->i_max = config->i_max;
     instance->out_max = config->out_max;
+    instance->deadBand = config->deadBand;
 
-    instance->err[0] = 0;
+    instance->err_last = 0;
+    instance->err = 0;
     instance->fdb = 0;
     instance->i_out = 0;
     instance->out = 0;
@@ -24,14 +27,18 @@ PIDInstance *PID_init(PID_Init_Config_s *config)
 
 float PID_calc(PIDInstance *pid)
 {
-    pid->err[1] = pid->err[0];
-    pid->err[0] = pid->ref - pid->fdb;
+    pid->err_last = pid->err;
+    pid->err = pid->ref - pid->fdb;
 
-    pid->i_out += pid->ki * pid->err[0];
+    if (pid->deadBand > 0 && fabs(pid->err) < pid->deadBand) {
+        pid->out = 0; // 在死区范围内输出为0
+        return pid->out;
+    }
+    pid->i_out += pid->ki * pid->err;
     if (pid->i_out > pid->i_max) pid->i_out = pid->i_max;
     if (pid->i_out < -pid->i_max) pid->i_out = -pid->i_max;
 
-    pid->out = pid->kp * pid->err[0] + pid->i_out + pid->kd * (pid->err[0] - pid->err[1]);
+    pid->out = pid->kp * pid->err + pid->i_out + pid->kd * (pid->err - pid->err_last);
     if (pid->out > pid->out_max) pid->out = pid->out_max;
     if (pid->out < -pid->out_max) pid->out = -pid->out_max;
     

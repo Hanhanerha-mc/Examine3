@@ -8,8 +8,8 @@
 #include <sys/types.h>
 
 /* 滤波系数设置为1的时候即关闭滤波 */
-#define SPEED_SMOOTH_COEF 0.85f      // 最好大于0.85
-#define CURRENT_SMOOTH_COEF 0.9f     // 必须大于0.9
+#define SPEED_SMOOTH_COEF 0.85f      // 一阶速度滤波参数（最好大于0.85？）
+#define CURRENT_SMOOTH_COEF 0.9f     // 一阶电流滤波参数（必须大于0.9？）
 #define ECD_ANGLE_COEF_DJI 0.043945f // (360/8192),将编码器值转化为角度制
 #define RPM_2_ANGLE_PER_SEC 6.0f       // 将RMP（每分钟圈数）转换为每秒转n度
 

@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #define MAX_SPEED_REF 100.0f
+#define MAX_ANGLE_REF 360.0f
 
 static uint8_t idx = 0;                                           // 电机实例索引
 static MotorInstance *motorInstance[MAX_MOTOR_CNT] = {NULL};        // 电机实例指针数组
@@ -181,11 +182,24 @@ void MotorModeSwitch(MotorInstance *instance, Motor_control_mode_e mode)
     instance->control_mode = mode;
 }
 
-void MotorSetSpeed(MotorInstance *instance, float ref)
+void MotorSetAngle(MotorInstance *instance, float angle_ref)
 {
-    instance->working_flag = RUNNING;
-    instance->ref = LimitValue_float(ref, -MAX_SPEED_REF, MAX_SPEED_REF);
-    instance->speed_pid->err[0] = 0; // 重置PID误差
+    angle_ref = LimitValue_float(angle_ref, -MAX_ANGLE_REF, MAX_ANGLE_REF);
+    if (angle_ref > 180.0f) angle_ref -= 360.0f; // 将角度限制在[-180, 180]范围内
+    if (angle_ref < -180.0f) angle_ref += 360.0f;
+
+    MotorModeSwitch(instance, ANGLE_CONTROL);      // 切换到角度控制模式
+    instance->ref = angle_ref + instance->measure.total_round * 360; // 角度控制的参考值需要考虑当前轮数
+    /*目前用于考核的位置闭环控制，后续考虑与云台坐标系为参考*/
+    instance->angle_pid->err_last = 0; // 重置PID误差
+    instance->angle_pid->i_out = 0; // 重置积分项
+}
+
+void MotorSetSpeed(MotorInstance *instance, float speed_ref)
+{
+    MotorModeSwitch(instance, SPEED_CONTROL);      // 切换到速度控制模式
+    instance->ref = LimitValue_float(speed_ref, -MAX_SPEED_REF, MAX_SPEED_REF);
+    instance->speed_pid->err_last = 0; // 重置PID误差
     instance->speed_pid->i_out = 0; // 重置积分项
 }
 
