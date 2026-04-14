@@ -12,10 +12,12 @@ typedef struct
     float i_out;
     float i_max;
     float out_max;
-    float deadBand;     // 死区范围，绝对值小于该值时输出为0
-    //变速控制相关参数
-    
 
+    float deadBand;     // 死区范围，绝对值小于该值时输出为0
+    float adaptiveKi;   // 自适应积分系数
+    float iScalingFactor; // 缩放因子，用于调整积分值的范围
+    float dActivationThreshold; // 微分作用阈值，当误差处于这一范围内时微分作用才会生效
+    
     float ref;          // Reference 参考值
     float fdb;          // Feedback  反馈值
     float err_last;     // LastError 上一次误差值
@@ -35,6 +37,8 @@ typedef struct
     float i_max;
     float out_max;
     float deadBand;     // 死区范围
+    float adaptiveKi;   // 自适应积分系数
+    float dActivationThreshold; // 微分作用阈值，当误差处于这一范围内时微分作用才会生效
 }PID_Init_Config_s;
 
 PIDInstance *PID_init(PID_Init_Config_s *config);
