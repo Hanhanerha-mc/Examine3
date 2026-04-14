@@ -6,9 +6,10 @@
 
 static CANInstance *can_instance[CAN_MX_REGISTER_CNT] = {NULL}; //can_instance指针数组,存储实例，用于回调时索引不同实例
 static uint8_t idx; // 全局CAN实例索引,每次有新的模块注册会自增
+// static uint8_t can_service_initialized = 0; // CAN服务启动标志
 
 static void CANAddFilter(CANInstance *_instance);
-static void CAN_ServiceInit();
+void CAN_ServiceInit();
 
 CANInstance *CANRegister(CAN_Init_Config_s *config)
 {
@@ -32,7 +33,6 @@ CANInstance *CANRegister(CAN_Init_Config_s *config)
 
     CANAddFilter(instance);         // 添加CAN过滤器规则
     can_instance[idx++] = instance; // 将实例保存到can_instance中
-
     return instance; // 返回can实例指针
 }
 
@@ -49,9 +49,9 @@ CANInstance *CANRegister(CAN_Init_Config_s *config)
 static void CANAddFilter(CANInstance *_instance)
 {
     // 1. 定义CAN过滤器配置结构体
-    CAN_FilterTypeDef can_filter_conf = {0};
+    CAN_FilterTypeDef can_filter_conf;
     
-    // 2. 静态变量，用于跟踪过滤器索引
+    // 2. 静态变量，用于跟踪过滤器索引  
     //    0-13号过滤器给CAN1使用，14-27号过滤器给CAN2使用
     static uint8_t can1_filter_idx = 0, can2_filter_idx = 14; 
 
@@ -65,7 +65,7 @@ static void CANAddFilter(CANInstance *_instance)
     
     // 5. 根据RX ID的奇偶性分配FIFO
     //    奇数ID的模块会被分配到FIFO0，偶数ID的模块会被分配到FIFO1
-    can_filter_conf.FilterFIFOAssignment = (_instance->rx_id & 1) ? CAN_RX_FIFO0 : CAN_RX_FIFO1;
+    can_filter_conf.FilterFIFOAssignment = (_instance->tx_id & 1) ? CAN_RX_FIFO0 : CAN_RX_FIFO1;
     
     // 6. 设置从机过滤器起始银行
     //    在STM32的BxCAN控制器中，CAN2是CAN1的从机，从第14个过滤器开始
@@ -75,7 +75,10 @@ static void CANAddFilter(CANInstance *_instance)
     //    因为使用STDID（标准ID），所以只有低11位有效，高5位要填0
     //    将RX ID左移5位，正好占据低11位的位置
     can_filter_conf.FilterIdLow = _instance->rx_id << 5;
-    
+    // can_filter_conf.FilterScale = CAN_FILTERSCALE_32BIT;  // ← 改为 32-bit
+    // can_filter_conf.FilterIdLow  = (_instance->rx_id << 5);          // 低 16 位
+    // can_filter_conf.FilterIdHigh = (_instance->rx_id << 5);          // 高 16 位（相同值）
+
     // 8. 根据CAN实例的CAN句柄分配过滤器银行
     //    如果是CAN1，则使用can1_filter_idx并自增
     //    如果是CAN2，则使用can2_filter_idx并自增
@@ -88,7 +91,7 @@ static void CANAddFilter(CANInstance *_instance)
     HAL_CAN_ConfigFilter(_instance->can_handle, &can_filter_conf);
 }
 
-static void CAN_ServiceInit()
+void CAN_ServiceInit()
 {
     HAL_CAN_Start(&hcan1);
     HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
@@ -100,26 +103,27 @@ static void CAN_ServiceInit()
 
 uint8_t CANTransmit(CANInstance *_instance, float timeout)
 {
-    static uint32_t busy_count;         //记录超时次数
-    static volatile float wait_time __attribute__((unused)); // for cancel warning
-    float dwt_start = DWT_GetTimeline_ms();
-    while (HAL_CAN_GetTxMailboxesFreeLevel(_instance->can_handle) == 0) // 等待邮箱空闲
-    {
-        if (DWT_GetTimeline_ms() - dwt_start > timeout) // 超时
-        {
-            // LOGWARNING("[bsp_can] CAN MAILbox full! failed to add msg to mailbox. Cnt [%d]", busy_count);
-            busy_count++;
-            return 1;
-        }
-    }
-    wait_time = DWT_GetTimeline_ms() - dwt_start;
-    // tx_mailbox会保存实际填入了这一帧消息的邮箱,但是知道是哪个邮箱发的似乎也没啥用
-    if (HAL_CAN_AddTxMessage(_instance->can_handle, &_instance->txconf, _instance->tx_buff, &_instance->tx_mailbox))
-    {
-        // LOGWARNING("[bsp_can] CAN bus BUS! cnt:%d", busy_count);
-        busy_count++;
-        return 1;
-    }
+    // static uint32_t busy_count;         //记录超时次数
+    // static volatile float wait_time __attribute__((unused)); // for cancel warning
+    // float dwt_start = DWT_GetTimeline_ms();
+    // while (HAL_CAN_GetTxMailboxesFreeLevel(_instance->can_handle) == 0) // 等待邮箱空闲
+    // {
+    //     if (DWT_GetTimeline_ms() - dwt_start > timeout) // 超时
+    //     {
+    //         // LOGWARNING("[bsp_can] CAN MAILbox full! failed to add msg to mailbox. Cnt [%d]", busy_count);
+    //         busy_count++;
+    //         return 1;
+    //     }
+    // }
+    // wait_time = DWT_GetTimeline_ms() - dwt_start;
+    // // tx_mailbox会保存实际填入了这一帧消息的邮箱,但是知道是哪个邮箱发的似乎也没啥用
+    // if (HAL_CAN_AddTxMessage(_instance->can_handle, &_instance->txconf, _instance->tx_buff, &_instance->tx_mailbox))
+    // {
+    //     // LOGWARNING("[bsp_can] CAN bus BUS! cnt:%d", busy_count);
+    //     busy_count++;
+    //     return 1;
+    // }
+    HAL_CAN_AddTxMessage(_instance->can_handle, &_instance->txconf, _instance->tx_buff, &_instance->tx_mailbox);
     return 0;       //return 0 为发送成功
 }
 

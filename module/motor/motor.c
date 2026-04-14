@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#define MAX_SPEED_REF 100.0f
+#define MAX_SPEED_REF 72000.0f
 #define MAX_ANGLE_REF 360.0f
 
 static uint8_t idx = 0;                                           // 电机实例索引
@@ -82,7 +82,6 @@ MotorInstance *Motor_init_and_grouping(Motor_Init_Config_s *motor_config, uint8_
     {
         case M2006:
         case M3508:
-            motor_instance->motor_can_instance->rx_id = 0x200 + id;         // 强制修改设置电机的接收ID
             if (id <= 4) {
                 motorGroup[0] = 1; 
                 motor_instance->sender_group = 0; // 分组0
@@ -94,7 +93,6 @@ MotorInstance *Motor_init_and_grouping(Motor_Init_Config_s *motor_config, uint8_
             }
             break;
         case GM6020:
-            motor_instance->motor_can_instance->rx_id = 0x204 + id;         // 强制修改设置电机的接收ID
             if (id <= 4) 
             {
                 motorGroup[2] = 1; 
@@ -208,6 +206,7 @@ static void MotorCallback(CANInstance *can_instance)
     uint8_t *rx_buff = can_instance->rx_buff;
     MotorInstance *motor_instance = (MotorInstance *)can_instance->parent_id;
     Motor_Measure_s *measure = &motor_instance->measure;
+    Motor_Type_e type = motor_instance->motor_type;
 
     measure->last_ecd = measure->ecd;
     measure->ecd = (uint16_t)rx_buff[0] << 8 | rx_buff[1];
@@ -223,5 +222,13 @@ static void MotorCallback(CANInstance *can_instance)
         measure->total_round--;
     else if (measure->ecd - measure->last_ecd < -4096)
         measure->total_round++;
-    measure->total_angle = measure->total_round * 360 + measure->angle_single_round;
+    if (type == M2006) {
+        measure->total_angle = measure->total_round * 10 + measure->angle_single_round / 36;
+    }
+    else if (type == M3508) {
+        measure->total_angle = measure->total_round * 360 / 19 + measure->angle_single_round / 19;
+    }
+    else if (type == GM6020) {
+        measure->total_angle = measure->total_round * 360 + measure->angle_single_round;
+    }
 }

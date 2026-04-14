@@ -55,11 +55,11 @@ void chassis_init()
         .motor_type = M3508,
         .can_config = {
             .can_handle = &hcan1,
-            .txconf = {
-                .IDE = CAN_ID_STD,
-                .RTR = CAN_RTR_DATA,
-                .DLC = 0x08,
-            },
+            // .txconf = {
+            //     .IDE = CAN_ID_STD,
+            //     .RTR = CAN_RTR_DATA,
+            //     .DLC = 0x08,
+            // },
             .rx_id = 0x203,
             // 回调函数与父指针在MotorInit中设置
         },

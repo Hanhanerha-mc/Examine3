@@ -33,7 +33,7 @@ typedef struct _
 typedef struct
 {
     CAN_HandleTypeDef *can_handle;              // can句柄
-    CAN_TxHeaderTypeDef txconf;                 // CAN报文发送配置
+    // CAN_TxHeaderTypeDef txconf;                 // CAN报文发送配置
     uint32_t tx_id;                             // 发送id
     uint32_t rx_id;                             // 接收id
     void (*can_module_callback)(struct _ *);    // callback needs an instance to tell among registered ones
@@ -43,5 +43,9 @@ typedef struct
 CANInstance *CANRegister(CAN_Init_Config_s *config);
 uint8_t CANTransmit(CANInstance *instance, float timeout);
 void CANSetDLC(CANInstance *_instance, uint8_t length);
+void CAN_ServiceInit();
+
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan);
+void HAL_CAN_RxFifo1MsgPendingCallback(CAN_HandleTypeDef *hcan);
 
 #endif

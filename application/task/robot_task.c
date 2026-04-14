@@ -17,18 +17,20 @@ volatile float g_test_speed_ref = 0.0f;
 volatile float g_test_speed_fdb = 0.0f;
 volatile float g_test_speed_err = 0.0f;
 volatile float g_test_speed_out = 0.0f;
+volatile float test1 = 0.0f;
+volatile float test2 = 0.0f;
 
 void TaskInit()
 {
     DBUS_Init(); // 初始化遥控器数据接收
-    chassis_init(); // 初始化底盘电机
+    // chassis_init(); // 初始化底盘电机
 
     // osThreadDef(text, StartTestTask, osPriorityNormal, 0, 256);
     // testTaskHandle = osThreadCreate(osThread(text), NULL);
-    osThreadDef(motorContrl, StartMotorTask, osPriorityNormal, 0, 256);
-    motorTaskHandle = osThreadCreate(osThread(motorContrl), NULL);
-    // osThreadDef(motorTest, MotorTestTask, osPriorityNormal, 0, 256);
-    // testTaskHandle = osThreadCreate(osThread(motorTest), NULL);
+    // osThreadDef(motorContrl, StartMotorTask, osPriorityNormal, 0, 256);
+    // motorTaskHandle = osThreadCreate(osThread(motorContrl), NULL);
+    osThreadDef(motorTest, MotorTestTask, osPriorityNormal, 0, 256);
+    testTaskHandle = osThreadCreate(osThread(motorTest), NULL);
 }
 
 void StartMotorTask()
@@ -37,7 +39,7 @@ void StartMotorTask()
     {
         chassis_set_rc_control(DBUS_Data.ch0, DBUS_Data.ch1, DBUS_Data.ch2, DBUS_Data.sw2);
         MotorContorl(); // 执行电机控制逻辑
-        osDelay(10); // 10ms周期
+        osDelay(5); // 5ms周期
     }
 }
 
@@ -47,11 +49,6 @@ void MotorTestTask()
     .motor_type = M2006,
     .can_config = {
         .can_handle = &hcan1,
-        .txconf = {
-            .IDE = CAN_ID_STD,
-            .RTR = CAN_RTR_DATA,
-            .DLC = 0x08,
-        },
         .rx_id = 0x201,
             // 回调函数与父指针在MotorInit中设置
     },
@@ -62,7 +59,7 @@ void MotorTestTask()
         .ki = 0,
         .kd = 0,
         .i_max = 0,
-        .out_max = 1000,
+        .out_max = 3000,
         },
         .ref = 0,  
     };
@@ -82,17 +79,19 @@ void MotorTestTask()
             osDelay(200);  // 中速闪烁表示 PID 初始化失败
         }
     }
-    
+
     MotorModeSwitch(motor, SPEED_CONTROL);      // 切换到速度控制模式
-    MotorSetSpeed(motor, 100); // 更新电机控制参考值
+    MotorSetSpeed(motor, 10000); // 更新电机控制参考值
 
     while (1)
     {
+        MotorContorl(); // 执行电机控制逻辑
         g_test_speed_ref = motor->speed_pid->ref;
         g_test_speed_fdb = motor->speed_pid->fdb;
         g_test_speed_err = motor->speed_pid->err;
         g_test_speed_out = motor->speed_pid->out;
-        osDelay(25); // 25ms周期
+        test1 = motor->measure.total_angle;
+        osDelay(5); // 5ms周期
     }
 }
 
