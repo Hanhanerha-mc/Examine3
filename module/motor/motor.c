@@ -184,7 +184,7 @@ void MotorModeSwitch(MotorInstance *instance, Motor_control_mode_e mode)
 
 void MotorSetAngle(MotorInstance *instance, float angle_ref)
 {
-    angle_ref = LimitValue_float(angle_ref, -MAX_ANGLE_REF, MAX_ANGLE_REF);
+    angle_ref = clamp_float(angle_ref, -MAX_ANGLE_REF, MAX_ANGLE_REF);
     if (angle_ref > 180.0f) angle_ref -= 360.0f; // 将角度限制在[-180, 180]范围内
     if (angle_ref < -180.0f) angle_ref += 360.0f;
 
@@ -198,7 +198,7 @@ void MotorSetAngle(MotorInstance *instance, float angle_ref)
 void MotorSetSpeed(MotorInstance *instance, float speed_ref)
 {
     MotorModeSwitch(instance, SPEED_CONTROL);      // 切换到速度控制模式
-    instance->ref = LimitValue_float(speed_ref, -MAX_SPEED_REF, MAX_SPEED_REF);
+    instance->ref = clamp_float(speed_ref, -MAX_SPEED_REF, MAX_SPEED_REF);
     instance->speed_pid->err_last = 0; // 重置PID误差
     instance->speed_pid->i_out = 0; // 重置积分项
 }

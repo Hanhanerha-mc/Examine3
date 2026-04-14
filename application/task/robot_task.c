@@ -21,20 +21,21 @@ volatile float g_test_speed_out = 0.0f;
 void TaskInit()
 {
     DBUS_Init(); // 初始化遥控器数据接收
-    // chassis_init(); // 初始化底盘电机
+    chassis_init(); // 初始化底盘电机
 
     // osThreadDef(text, StartTestTask, osPriorityNormal, 0, 256);
     // testTaskHandle = osThreadCreate(osThread(text), NULL);
     osThreadDef(motorContrl, StartMotorTask, osPriorityNormal, 0, 256);
     motorTaskHandle = osThreadCreate(osThread(motorContrl), NULL);
-    osThreadDef(motorTest, MotorTestTask, osPriorityNormal, 0, 256);
-    testTaskHandle = osThreadCreate(osThread(motorTest), NULL);
+    // osThreadDef(motorTest, MotorTestTask, osPriorityNormal, 0, 256);
+    // testTaskHandle = osThreadCreate(osThread(motorTest), NULL);
 }
 
 void StartMotorTask()
 {
     while (1)
     {
+        chassis_set_rc_control(DBUS_Data.ch0, DBUS_Data.ch1, DBUS_Data.ch2, DBUS_Data.sw2);
         MotorContorl(); // 执行电机控制逻辑
         osDelay(10); // 10ms周期
     }
@@ -89,7 +90,7 @@ void MotorTestTask()
     {
         g_test_speed_ref = motor->speed_pid->ref;
         g_test_speed_fdb = motor->speed_pid->fdb;
-        g_test_speed_err = motor->speed_pid->err[0];
+        g_test_speed_err = motor->speed_pid->err;
         g_test_speed_out = motor->speed_pid->out;
         osDelay(25); // 25ms周期
     }

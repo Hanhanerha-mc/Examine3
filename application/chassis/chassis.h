@@ -3,6 +3,7 @@
 
 #include "pid.h"
 #include "motor.h"
+#include <stdint.h>
 
 typedef struct
 {
@@ -20,5 +21,8 @@ typedef struct
 } Chassis_Init_Config_s; 
 
 void chassis_init();
+ChassisInstance *chassis_get_instance(void);
+void chassis_set_velocity(float vx, float vy, float wz);
+void chassis_set_rc_control(int16_t ch0, int16_t ch1, int16_t ch2, uint8_t sw2);
 
 #endif

@@ -21,8 +21,8 @@
 // #include "chassis.h"
 // #include "task.h"
 
-uint8_t LimitValue_uint8(uint8_t value, uint8_t min, uint8_t max);
-uint16_t LimitValue_uint16(uint16_t value, uint16_t min, uint16_t max);
-float LimitValue_float(float value, float min, float max);
+uint8_t clamp_uint8(uint8_t value, uint8_t min, uint8_t max);
+uint16_t clamp_uint16(uint16_t value, uint16_t min, uint16_t max);
+float clamp_float(float value, float min, float max);
 
 #endif
