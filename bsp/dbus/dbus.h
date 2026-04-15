@@ -5,7 +5,7 @@
 #include "usart.h"
 #include <stdint.h>
 
-#define DBUS_MAX_LEN 18
+#define DBUS_MAX_LEN 50
 #define DBUS_BUFLEN 18
 #define DBUS_HUART huart3
 #define RC_CH_VALUE_OFFSET 1024
@@ -22,7 +22,7 @@ typedef struct
     uint8_t sw2; // 开关2
 } DBUS_Data_s;
 
-extern DBUS_Data_s DBUS_Data;// 接收缓冲区
+extern volatile DBUS_Data_s DBUS_Data;// 接收缓冲区
 
 void DBUS_Init();
 void uart_receive_handler(UART_HandleTypeDef *huart);

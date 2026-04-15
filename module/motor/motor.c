@@ -180,14 +180,13 @@ void MotorModeSwitch(MotorInstance *instance, Motor_control_mode_e mode)
     instance->control_mode = mode;
 }
 
-void MotorSetAngle(MotorInstance *instance, float angle_ref)
+void MotorSetAngle(MotorInstance *instance, float ref)
 {
-    angle_ref = clamp_float(angle_ref, -MAX_ANGLE_REF, MAX_ANGLE_REF);
-    if (angle_ref > 180.0f) angle_ref -= 360.0f; // 将角度限制在[-180, 180]范围内
-    if (angle_ref < -180.0f) angle_ref += 360.0f;
+    ref = clamp_float(ref, 0, MAX_ANGLE_REF);
+    if (ref > 360.0f) ref -= 360.0f; // 将角度限制在[0, 360]范围内
 
     MotorModeSwitch(instance, ANGLE_CONTROL);      // 切换到角度控制模式
-    instance->ref = angle_ref + instance->measure.total_round * 360; // 角度控制的参考值需要考虑当前轮数
+    instance->ref = ref + (instance->measure.total_round / 36) * 360.0f; // 角度控制的参考值需要考虑当前轮数,先整除36,再乘以360度,得到当前轮数
     /*目前用于考核的位置闭环控制，后续考虑与云台坐标系为参考*/
     instance->angle_pid->err_last = 0; // 重置PID误差
     instance->angle_pid->i_out = 0; // 重置积分项

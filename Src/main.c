@@ -108,7 +108,6 @@ int main(void)
   MX_SPI1_Init();
   MX_TIM4_Init();
   MX_TIM5_Init();
-  MX_USART3_UART_Init();
   MX_RNG_Init();
   MX_RTC_Init();
   MX_TIM1_Init();
@@ -121,6 +120,7 @@ int main(void)
   MX_SPI2_Init();
   MX_CRC_Init();
   MX_DAC_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   TaskInit();
 

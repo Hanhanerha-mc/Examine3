@@ -11,7 +11,7 @@
 /*进行Init即可，其他无需干涉，数据会存储到DBUS_Data结构体中*/
 
 
-DBUS_Data_s DBUS_Data = {0, 0, 0, 0, 0, 0, 0};
+volatile DBUS_Data_s DBUS_Data = {0, 0, 0, 0, 0, 0, 0};
 uint8_t DBUS_rxbuff[DBUS_BUFLEN];// 接收缓冲区
 
 static int uart_receive_dma_no_it(UART_HandleTypeDef* huart, uint8_t* pData, uint32_t Size);
@@ -29,7 +29,7 @@ void DBUS_Init()
 static int uart_receive_dma_no_it(UART_HandleTypeDef* huart, uint8_t* pData, uint32_t Size)
 {
     if (huart->RxState == HAL_UART_STATE_READY) {       // 判断UART处于就绪状态
-        if ((pData == NULL) || (Size == 0U)) {      // 参数检查：确保数据指针有效且大小非零
+        if ((pData == NULL) || (Size == 0)) {      // 参数检查：确保数据指针有效且大小非零
             return HAL_ERROR;
         }
         
@@ -75,6 +75,11 @@ static void DBUS_Callback(DBUS_Data_s *DBUS_Data, uint8_t *buff)
     }
 }
 
+uint16_t dma_current_data_counter(DMA_Stream_TypeDef *dma_stream)
+{//返回DMA预定义的缓冲区剩余的长度，方便了解传输过程中还有多少数据尚未传输
+  return ((uint16_t)(dma_stream->NDTR));
+}
+
 static void uart_rx_idle_callback(UART_HandleTypeDef* huart)
 {
 	__HAL_UART_CLEAR_IDLEFLAG(huart);
@@ -84,7 +89,7 @@ static void uart_rx_idle_callback(UART_HandleTypeDef* huart)
 	{
 		__HAL_DMA_DISABLE(huart->hdmarx);//失能DMA接收，防止下一次接收的数据在上一次数据的尾部，而不是全新的数据
 
-		if ((DBUS_MAX_LEN - huart->hdmarx->Instance->NDTR) == DBUS_BUFLEN)
+		if ((DBUS_MAX_LEN - dma_current_data_counter(huart->hdmarx->Instance)) == DBUS_BUFLEN)
 		{//计算当前接收的数据长度，如果接收到的数据长度等于18字节，则调用处理数据函数
 			DBUS_Callback(&DBUS_Data, DBUS_rxbuff);	//处理接收的数据并解码
 		}
@@ -92,7 +97,6 @@ static void uart_rx_idle_callback(UART_HandleTypeDef* huart)
 		__HAL_DMA_ENABLE(huart->hdmarx);//重新启用DMA接收，以便继续接收数据
 	}
 }
-
 void uart_receive_handler(UART_HandleTypeDef *huart)
 {//用于检查UART接收状态并在接收到空闲状态时调用相应的回调函数
 	if (__HAL_UART_GET_FLAG(huart, UART_FLAG_IDLE) && //检查UART是否设置了空闲标志，表示UART接收完成并进入空闲状态

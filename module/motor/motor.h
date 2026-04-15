@@ -98,6 +98,7 @@ void MotorContorl(void);
 void MotorWorkClose(MotorInstance *instance);
 void MotorModeSwitch(MotorInstance *instance, Motor_control_mode_e mode);
 void MotorSetSpeed(MotorInstance *instance, float ref);
+void MotorSetAngle(MotorInstance *instance, float ref);
 
 // typedef struct
 // {
