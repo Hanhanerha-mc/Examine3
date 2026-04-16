@@ -196,8 +196,8 @@ void MotorSetSpeed(MotorInstance *instance, float speed_ref)
 {
     MotorModeSwitch(instance, SPEED_CONTROL);      // 切换到速度控制模式
     instance->ref = clamp_float(speed_ref, -MAX_SPEED_REF, MAX_SPEED_REF);
-    instance->speed_pid->err_last = 0; // 重置PID误差
-    instance->speed_pid->i_out = 0; // 重置积分项
+    // instance->speed_pid->err_last = 0; // 重置PID误差
+    // instance->speed_pid->i_out = 0; // 重置积分项
 }
 
 static void MotorCallback(CANInstance *can_instance)

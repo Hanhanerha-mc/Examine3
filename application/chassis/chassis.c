@@ -8,35 +8,26 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define CHASSIS_RC_DEADBAND 30
-#define CHASSIS_VX_MAX 120.0f
-#define CHASSIS_VY_MAX 120.0f
-#define CHASSIS_WZ_MAX 80.0f
-#define CHASSIS_WHEEL_SPEED_MAX 100.0f
+#define CHASSIS_RC_DEADBAND 40
+#define CHASSIS_VX_MAX 15000.0f
+#define CHASSIS_VY_MAX 15000.0f
+#define CHASSIS_WZ_MAX 15000.0f
+#define CHASSIS_WHEEL_SPEED_MAX 15000.0f
 
-static ChassisInstance *g_chassis = NULL;
-
-static float normalize_rc_channel(int16_t ch)
-{
-    if (abs(ch) < CHASSIS_RC_DEADBAND) {
-        return 0.0f;
-    }
-
-    return clamp_float((float)ch / RC_CH_VALUE_MAX, -1.0f, 1.0f);
-}
+static ChassisInstance *chassis = NULL;
 
 static void chassis_stop(void)
 {
-    if (g_chassis == NULL) return;
-    MotorSetSpeed(g_chassis->motor_lf, 0.0f);
-    MotorSetSpeed(g_chassis->motor_rf, 0.0f);
-    MotorSetSpeed(g_chassis->motor_lb, 0.0f);
-    MotorSetSpeed(g_chassis->motor_rb, 0.0f);
+    if (chassis == NULL) return;
+    MotorSetSpeed(chassis->motor_lf, 0.0f);
+    MotorSetSpeed(chassis->motor_rf, 0.0f);
+    MotorSetSpeed(chassis->motor_lb, 0.0f);
+    MotorSetSpeed(chassis->motor_rb, 0.0f);
 }
 
 void chassis_init()
 {
-    if (g_chassis != NULL) return;          // 已经初始化过了，直接返回
+    if (chassis != NULL) return;          // 已经初始化过了，直接返回
     ChassisInstance *instance = (ChassisInstance *)malloc(sizeof(ChassisInstance));
     memset(instance, 0, sizeof(ChassisInstance));
     
@@ -74,11 +65,13 @@ void chassis_init()
             .out_max = 0,
         },
         .speed_pid_config = {
-            .kp = 7.5,
-            .ki = 0,
+            .kp = 3.5,
+            .ki = 0.2,
             .kd = 0,
-            .i_max = 0,
-            .out_max = 2000,
+            .i_max = 1200,
+            .out_max = 15000,
+
+            .deadBand = 256,
         },
         .ref = 0,
     };
@@ -86,33 +79,33 @@ void chassis_init()
     /*顺序是lf，rf，lb，rb*/
     instance->motor_lf = Motor_init_and_grouping(&motor_config, 3);
     motor_config.can_config.rx_id = 0x204; // 修改接收ID
-    motor_config.speed_pid_config.kp = 5;
+    // motor_config.speed_pid_config.kp = 5;
     instance->motor_rf = Motor_init_and_grouping(&motor_config, 4);
     motor_config.can_config.rx_id = 0x202; // 修改接收ID
-    motor_config.speed_pid_config.kp = 6;
+    // motor_config.speed_pid_config.kp = 5.2;
     instance->motor_lb = Motor_init_and_grouping(&motor_config, 2);
     motor_config.can_config.rx_id = 0x201; // 修改接收ID
-    motor_config.speed_pid_config.kp = 8.5;
+    // motor_config.speed_pid_config.kp = 5;
     instance->motor_rb = Motor_init_and_grouping(&motor_config, 1);
 
-    g_chassis = instance;
+    chassis = instance;
 }
 
 ChassisInstance *chassis_get_instance(void)
 {
-    return g_chassis;
+    return chassis;
 }
 
-void chassis_set_velocity(float vx, float vy, float wz)
+void chassisSetSpeed(float vx, float vy, float wz)
 {
-    if (g_chassis == NULL) return;
+    if (chassis == NULL) return;
 
     float lf = vx + vy + wz;
     float rf = vx - vy - wz;
     float lb = vx - vy + wz;
     float rb = vx + vy - wz;
 
-    // 速度归一化处理
+    // 如果有任何一个轮子的速度超过最大值，则按比例缩放所有轮子的速度
     float max_abs = fabsf(lf);
     if (fabsf(rf) > max_abs) max_abs = fabsf(rf);
     if (fabsf(lb) > max_abs) max_abs = fabsf(lb);
@@ -126,24 +119,37 @@ void chassis_set_velocity(float vx, float vy, float wz)
         rb *= ratio;
     }
 
-    MotorSetSpeed(g_chassis->motor_lf, lf);
-    MotorSetSpeed(g_chassis->motor_rf, rf);
-    MotorSetSpeed(g_chassis->motor_lb, lb);
-    MotorSetSpeed(g_chassis->motor_rb, rb);
+    //设置电机速度
+    MotorSetSpeed(chassis->motor_lf, lf);
+    MotorSetSpeed(chassis->motor_rf, rf);
+    MotorSetSpeed(chassis->motor_lb, lb);
+    MotorSetSpeed(chassis->motor_rb, rb);
+}
+
+static float normalize_rc_channel(int16_t ch)
+{
+    if (abs(ch) < CHASSIS_RC_DEADBAND) {        // 如果数据在死区范围内，返回0
+        return 0.0f;
+    }
+
+    return clamp_float((float)ch / RC_CH_VALUE_MAX, -1.0f, 1.0f);
 }
 
 void chassis_set_rc_control(int16_t ch0, int16_t ch1, int16_t ch2, uint8_t sw2)
 {
-    if (g_chassis == NULL) return;
+    if (chassis == NULL) return;
 
+    /*还没有测试*/
     if (sw2 == 1) {
         chassis_stop();
         return;
     }
 
-    float vx = normalize_rc_channel(ch1) * CHASSIS_VX_MAX;
-    float vy = normalize_rc_channel(ch0) * CHASSIS_VY_MAX;
+    //获取各个方向的速度分量的比例并计算速度分量
+    float vx = normalize_rc_channel(ch0) * CHASSIS_VX_MAX;
+    float vy = normalize_rc_channel(ch1) * CHASSIS_VY_MAX;
     float wz = normalize_rc_channel(ch2) * CHASSIS_WZ_MAX;
-    chassis_set_velocity(vx, vy, wz);
+    // 设置底盘速度
+    chassisSetSpeed(vx, vy, wz);
 }
 

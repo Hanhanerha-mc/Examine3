@@ -49,7 +49,7 @@ CANInstance *CANRegister(CAN_Init_Config_s *config)
 static void CANAddFilter(CANInstance *_instance)
 {
     // 1. 定义CAN过滤器配置结构体
-    CAN_FilterTypeDef can_filter_conf;
+    CAN_FilterTypeDef can_filter_conf = {0};
     
     // 2. 静态变量，用于跟踪过滤器索引  
     //    0-13号过滤器给CAN1使用，14-27号过滤器给CAN2使用
@@ -65,19 +65,19 @@ static void CANAddFilter(CANInstance *_instance)
     
     // 5. 根据RX ID的奇偶性分配FIFO
     //    奇数ID的模块会被分配到FIFO0，偶数ID的模块会被分配到FIFO1
-    can_filter_conf.FilterFIFOAssignment = (_instance->tx_id & 1) ? CAN_RX_FIFO0 : CAN_RX_FIFO1;
+    can_filter_conf.FilterFIFOAssignment = (_instance->rx_id & 1) ? CAN_RX_FIFO0 : CAN_RX_FIFO1;
     
     // 6. 设置从机过滤器起始银行
     //    在STM32的BxCAN控制器中，CAN2是CAN1的从机，从第14个过滤器开始
     can_filter_conf.SlaveStartFilterBank = 14;
     
-    // 7. 配置过滤器ID低16位
-    //    因为使用STDID（标准ID），所以只有低11位有效，高5位要填0
-    //    将RX ID左移5位，正好占据低11位的位置
-    can_filter_conf.FilterIdLow = _instance->rx_id << 5;
-    // can_filter_conf.FilterScale = CAN_FILTERSCALE_32BIT;  // ← 改为 32-bit
-    // can_filter_conf.FilterIdLow  = (_instance->rx_id << 5);          // 低 16 位
-    // can_filter_conf.FilterIdHigh = (_instance->rx_id << 5);          // 高 16 位（相同值）
+    // 7. 16-bit IDLIST 模式下，同一个 bank 可以放 4 个标准ID。
+    //    这里将4个槽位都写入同一个 rx_id，避免未初始化槽位造成误匹配/漏匹配。
+    uint16_t std_id_16b = (uint16_t)(_instance->rx_id << 5);
+    can_filter_conf.FilterIdLow = std_id_16b;
+    can_filter_conf.FilterIdHigh = std_id_16b;
+    can_filter_conf.FilterMaskIdLow = std_id_16b;
+    can_filter_conf.FilterMaskIdHigh = std_id_16b;
 
     // 8. 根据CAN实例的CAN句柄分配过滤器银行
     //    如果是CAN1，则使用can1_filter_idx并自增
@@ -88,17 +88,39 @@ static void CANAddFilter(CANInstance *_instance)
     can_filter_conf.FilterActivation = CAN_FILTER_ENABLE;
 
     // 10. 调用HAL库函数应用过滤器配置
-    HAL_CAN_ConfigFilter(_instance->can_handle, &can_filter_conf);
+    if (HAL_CAN_ConfigFilter(_instance->can_handle, &can_filter_conf) != HAL_OK)
+    {
+        Error_Handler();
+    }
 }
 
 void CAN_ServiceInit()
 {
-    HAL_CAN_Start(&hcan1);
-    HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
-    HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO1_MSG_PENDING);
-    HAL_CAN_Start(&hcan2);
-    HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING);
-    HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO1_MSG_PENDING);
+    if (HAL_CAN_Start(&hcan1) != HAL_OK)
+    {
+        Error_Handler();
+    }
+    if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)
+    {
+        Error_Handler();
+    }
+    if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO1_MSG_PENDING) != HAL_OK)
+    {
+        Error_Handler();
+    }
+
+    if (HAL_CAN_Start(&hcan2) != HAL_OK)
+    {
+        Error_Handler();
+    }
+    if (HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)
+    {
+        Error_Handler();
+    }
+    if (HAL_CAN_ActivateNotification(&hcan2, CAN_IT_RX_FIFO1_MSG_PENDING) != HAL_OK)
+    {
+        Error_Handler();
+    }
 }
 
 uint8_t CANTransmit(CANInstance *_instance, float timeout)

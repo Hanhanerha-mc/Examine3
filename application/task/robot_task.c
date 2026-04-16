@@ -37,11 +37,11 @@ void TaskInit()
 
     // osThreadDef(text, StartTestTask, osPriorityNormal, 0, 256);
     // testTaskHandle = osThreadCreate(osThread(text), NULL);
-    // osThreadDef(motorContrl, StartMotorTask, osPriorityNormal, 0, 256);
-    // motorTaskHandle = osThreadCreate(osThread(motorContrl), NULL);
+    osThreadDef(motorContrl, StartMotorTask, osPriorityNormal, 0, 512);
+    motorTaskHandle = osThreadCreate(osThread(motorContrl), NULL);
 
-    osThreadDef(motorTest, MotorTestTask, osPriorityNormal, 0, 256);
-    testTaskHandle = osThreadCreate(osThread(motorTest), NULL);
+    // osThreadDef(motorTest, MotorTestTask, osPriorityNormal, 0, 512);
+    // testTaskHandle = osThreadCreate(osThread(motorTest), NULL);
     // osThreadDef(angleTest, MotorAngleTask, osPriorityNormal, 0, 256);
     // testTaskHandle = osThreadCreate(osThread(angleTest), NULL);
 }
@@ -52,7 +52,7 @@ void StartMotorTask()
     {
         chassis_set_rc_control(DBUS_Data.ch0, DBUS_Data.ch1, DBUS_Data.ch2, DBUS_Data.sw2);
         MotorContorl(); // 执行电机控制逻辑
-        osDelay(5); // 5ms周期
+        osDelay(2); // 2ms周期
     }
 }
 
@@ -100,12 +100,13 @@ void MotorTestTask()
     //     }
     // }
 
-    // MotorModeSwitch(motor, ANGLE_CONTROL);      // 切换到角度控制模式
-    // MotorSetSpeed(motor, 1000); // 设置目标速度为1000rpm
-    // MotorSetSpeed(motor, 0); // 更新电机控制参考值
+    // MotorModeSwitch(motor, SPEED_CONTROL);      // 切换到角度控制模式
+    // MotorSetSpeed(motor, 0);
+    
 
     while (1)
     {
+        MotorSetSpeed(motor, DBUS_Data.ch2 * 80); // 更新电机控制参考值
         MotorContorl(); // 执行电机控制逻辑
         g_test_speed_ref = motor->speed_pid->ref;
         g_test_speed_fdb = motor->speed_pid->fdb;
@@ -115,7 +116,7 @@ void MotorTestTask()
         g_test_angle_fdb = motor->angle_pid->fdb;
         g_test_angle_err = motor->angle_pid->err;
         g_test_angle_out = motor->angle_pid->out;
-        test1 = motor->measure.total_angle;
+        test1 = motor->measure.speed_aps;
         test2 = DBUS_Data.ch0;
         test3 = DBUS_Data.ch1;
         test4 = DBUS_Data.ch2;
