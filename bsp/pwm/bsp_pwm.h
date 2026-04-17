@@ -1,6 +1,8 @@
 #ifndef _BSP_PWM_H_
 #define _BSP_PWM_H_
 
+#ifdef _USE_PWM_
+
 #include "main.h"
 #include "tim.h"
 #include "stdint.h"
@@ -66,4 +68,5 @@ void PWMSetPeriod(PWMInstance *pwm, float period);
  */
 void PWMStartDMA(PWMInstance *pwm, uint32_t *pData, uint32_t Size);
 
+#endif
 #endif

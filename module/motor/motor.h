@@ -13,6 +13,11 @@
 #define ECD_ANGLE_COEF_DJI 0.043945f // (360/8192),将编码器值转化为角度制
 #define RPM_2_ANGLE_PER_SEC 6.0f       // 将RMP（每分钟圈数）转换为每秒转n度
 
+#define GM6020_VOLTAGE_MAX 25000
+#define GM6050_CURRENT_MAX 16384
+#define M3508_CURRENT_MAX 16384
+#define M2006_CURRENT_MAX 10000
+
 #define MAX_MOTOR_CNT 8
 
 

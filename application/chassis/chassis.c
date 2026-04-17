@@ -69,7 +69,7 @@ void chassis_init()
             .ki = 0.2,
             .kd = 0,
             .i_max = 1200,
-            .out_max = 15000,
+            .out_max = M3508_CURRENT_MAX,
 
             .deadBand = 256,
         },

@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#ifdef _USE_PWM_
+
 // 配合中断以及初始化
 static uint8_t idx;
 static PWMInstance *pwm_instance[PWM_DEVICE_CNT] = {NULL}; // 所有的pwm instance保存于此,用于callback时判断中断来源
@@ -99,3 +101,5 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim)
         }
     }
 }
+
+#endif
