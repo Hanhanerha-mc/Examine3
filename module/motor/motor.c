@@ -110,7 +110,7 @@ MotorInstance *Motor_init_and_grouping(Motor_Init_Config_s *motor_config, uint8_
     return motor_instance;
 }
 
-void MotorContorl(void)
+void MotorControl(void)
 {
     // 检索各个电机
     if (idx == 0) return; // 如果没有电机实例，直接返回
@@ -186,12 +186,18 @@ void MotorSetAngle(MotorInstance *instance, float ref)
     if (ref > 360.0f) ref -= 360.0f; // 将角度限制在[0, 360]范围内
 
     MotorModeSwitch(instance, ANGLE_CONTROL);      // 切换到角度控制模式
-    
-    float delta = instance->measure.total_angle % 360.0f - ref;
-    if (delta > 180.0f) instance->ref = ref + (instance->measure.total_round / 36 + 1) * 360.0f;
-    else if (delta < -180.0f) instance->ref = ref + (instance->measure.total_round / 36 - 1) * 360.0f;
-    else instance->ref = ref + (instance->measure.total_round / 36) * 360.0f; // 角度控制的参考值需要考虑当前轮数,先整除36,再乘以360度,得到当前轮数
 
+    // float delta = instance->measure.total_angle % 360.0f - ref;
+    // if (delta > 180.0f) instance->ref = ref + (instance->measure.total_round / 36 + 1) * 360.0f;
+    // else if (delta < -180.0f) instance->ref = ref + (instance->measure.total_round / 36 - 1) * 360.0f;
+    // else instance->ref = ref + (instance->measure.total_round / 36) * 360.0f; // 角度控制的参考值需要考虑当前轮数,先整除36,再乘以360度,得到当前轮数
+
+    ref = ref + (instance->measure.total_round / 36) * 360.0f; // 角度控制的参考值需要考虑当前轮数,先整除36,再乘以360度,得到当前轮数
+    float delta = instance->measure.total_angle - ref;
+    if (delta > 180.0f) ref += 360.0f;
+    else if (delta < -180.0f) ref -= 360.0f;
+    instance->ref = ref;
+    
     // instance->ref = ref + (instance->measure.total_round / 36) * 360.0f; // 角度控制的参考值需要考虑当前轮数,先整除36,再乘以360度,得到当前轮数
     // /*目前用于考核的位置闭环控制，后续考虑与云台坐标系为参考*/
     instance->angle_pid->err_last = 0; // 重置PID误差

@@ -76,7 +76,7 @@ void StartChassisTask()
     while (1)
     {
         chassis_set_rc_control(DBUS_Data.ch0, DBUS_Data.ch1, DBUS_Data.ch2, DBUS_Data.sw2);
-        MotorContorl(); // 执行电机控制逻辑
+        MotorControl(); // 执行电机控制逻辑
         osDelay(2); // 2ms周期
     }
 }
@@ -132,7 +132,7 @@ void MotorTestTask()
     while (1)
     {
         MotorSetSpeed(motor, DBUS_Data.ch2 * 80); // 更新电机控制参考值
-        MotorContorl(); // 执行电机控制逻辑
+        MotorControl(); // 执行电机控制逻辑
         g_test_speed_ref = motor->speed_pid->ref;
         g_test_speed_fdb = motor->speed_pid->fdb;
         g_test_speed_err = motor->speed_pid->err;
