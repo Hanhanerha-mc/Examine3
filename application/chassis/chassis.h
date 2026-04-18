@@ -14,14 +14,7 @@ typedef struct
     PIDInstance *speed_pid;
 } ChassisInstance;
 
-typedef struct
-{
-    MotorInstance *motor_instance[4];
-    PIDInstance *speed_pid;
-} Chassis_Init_Config_s; 
-
-void chassis_init();
-ChassisInstance *chassis_get_instance(void);
+void chassisInit(void);
 void chassisSetSpeed(float vx, float vy, float wz);
 void chassis_set_rc_control(int16_t ch0, int16_t ch1, int16_t ch2, uint8_t sw2);
 

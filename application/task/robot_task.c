@@ -1,18 +1,17 @@
 #include "robot_task.h"
 #include "bsp.h"
+#include "cmsis_os2.h"
 #include "dbus.h"
 #include "motor.h"
 #include "chassis.h"
 #include "main.h"
+#include "cmsis_os.h"
 
 void StartMotorTask();
-void StartTestTask();
-void MotorTestTask();
-void MotorAngleTask();
-
-osThreadId motorTaskHandle;
-osThreadId testTaskHandle;
-osThreadId remoteTaskHandle;
+// void StartTestTask();
+// void MotorTestTask();
+// void MotorAngleTask();
+void StartChassisTask();
 
 MotorInstance *motor; // 全局电机实例指针，供测试任务使用
 
@@ -30,15 +29,42 @@ volatile float test3 = 0.0f;
 volatile float test4 = 0.0f;
 volatile float test5 = 0.0f;
 
+osThreadId_t chassisTaskHandle;
+const osThreadAttr_t chassisTask_attributes = {
+  .name = "chassisTask",
+  .stack_size = 512 * sizeof(StackType_t),
+  .priority = (osPriority_t)osPriorityNormal,
+};
+
+osThreadId_t motorTaskHandle;
+const osThreadAttr_t motorTask_attributes = {
+  .name = "motorTask",
+  .stack_size = 256 * sizeof(StackType_t),
+  .priority = (osPriority_t)osPriorityNormal,
+};
+
+osThreadId_t testTaskHandle;
+const osThreadAttr_t testTask_attributes = {
+  .name = "testTask",
+  .stack_size = 256 * sizeof(StackType_t),
+  .priority = (osPriority_t)osPriorityNormal,
+};
+
 void TaskInit()
 {
     DBUS_Init(); // 初始化遥控器数据接收
-    chassis_init(); // 初始化底盘电机
+    chassisInit(); // 初始化底盘电机
+
+    chassisTaskHandle = osThreadNew(StartChassisTask, NULL, &chassisTask_attributes);
+    motorTaskHandle = osThreadNew(StartMotorTask, NULL, &motorTask_attributes);
+    // testTaskHandle = osThreadNew(MotorTestTask, NULL, &testTask_attributes);
+
+
 
     // osThreadDef(text, StartTestTask, osPriorityNormal, 0, 256);
     // testTaskHandle = osThreadCreate(osThread(text), NULL);
-    osThreadDef(motorContrl, StartMotorTask, osPriorityNormal, 0, 512);
-    motorTaskHandle = osThreadCreate(osThread(motorContrl), NULL);
+    // osThreadDef(motorContrl, StartMotorTask, osPriorityNormal, 0, 512);
+    // motorTaskHandle = osThreadCreate(osThread(motorContrl), NULL);
 
     // osThreadDef(motorTest, MotorTestTask, osPriorityNormal, 0, 512);
     // testTaskHandle = osThreadCreate(osThread(motorTest), NULL);
@@ -46,8 +72,9 @@ void TaskInit()
     // testTaskHandle = osThreadCreate(osThread(angleTest), NULL);
 }
 
-void StartMotorTask()
+void StartChassisTask()
 {
+    
     while (1)
     {
         chassis_set_rc_control(DBUS_Data.ch0, DBUS_Data.ch1, DBUS_Data.ch2, DBUS_Data.sw2);

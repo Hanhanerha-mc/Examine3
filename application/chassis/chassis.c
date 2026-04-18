@@ -16,7 +16,7 @@
 
 static ChassisInstance *chassis = NULL;
 
-static void chassis_stop(void)
+static void chassisStop(void)
 {
     if (chassis == NULL) return;
     MotorSetSpeed(chassis->motor_lf, 0.0f);
@@ -25,7 +25,7 @@ static void chassis_stop(void)
     MotorSetSpeed(chassis->motor_rb, 0.0f);
 }
 
-void chassis_init()
+void chassisInit(void)
 {
     if (chassis != NULL) return;          // 已经初始化过了，直接返回
     ChassisInstance *instance = (ChassisInstance *)malloc(sizeof(ChassisInstance));
@@ -91,11 +91,6 @@ void chassis_init()
     chassis = instance;
 }
 
-ChassisInstance *chassis_get_instance(void)
-{
-    return chassis;
-}
-
 void chassisSetSpeed(float vx, float vy, float wz)
 {
     if (chassis == NULL) return;
@@ -141,7 +136,7 @@ void chassis_set_rc_control(int16_t ch0, int16_t ch1, int16_t ch2, uint8_t sw2)
 
     /*还没有测试*/
     if (sw2 == 1) {
-        chassis_stop();
+        chassisStop();
         return;
     }
 
