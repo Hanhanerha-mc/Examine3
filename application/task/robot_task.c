@@ -1,11 +1,9 @@
 #include "robot_task.h"
 #include "bsp.h"
-#include "cmsis_os2.h"
 #include "dbus.h"
 #include "motor.h"
 #include "chassis.h"
 #include "main.h"
-#include "cmsis_os.h"
 
 void StartMotorTask();
 // void StartTestTask();

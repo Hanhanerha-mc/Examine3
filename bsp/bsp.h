@@ -12,7 +12,6 @@
 #include <sys/types.h>
 
 #include "FreeRTOS.h"
-#include "cmsis_os.h"
 #include "main.h"
 #include "bsp_can.h"
 #include "dwt.h"
