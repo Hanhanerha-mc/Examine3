@@ -177,7 +177,7 @@ BMI088_Status_e BMI088_Init(void)
     HAL_Delay(2U);
 
     /* First ACC read is used to switch ACC interface into SPI mode. */
-    bmi088_spi_read_acc(BMI088_ACC_CHIP_ID_ADDR, &acc_id, 1U);
+    // bmi088_spi_read_acc(BMI088_ACC_CHIP_ID_ADDR, &acc_id, 1U);
 
     /* 软重置加速度计 */
     bmi088_spi_write_acc(BMI088_ACC_SOFTRESET_ADDR, BMI088_SOFTRESET_CMD);

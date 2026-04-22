@@ -1,5 +1,7 @@
 #include "robot_task.h"
+#include "bmi088.h"
 #include "bsp.h"
+#include "cmsis_os2.h"
 #include "dbus.h"
 #include "motor.h"
 #include "chassis.h"
@@ -7,8 +9,8 @@
 
 void StartMotorTask();
 // void StartTestTask();
-// void MotorTestTask();
-// void MotorAngleTask();
+void MotorTestTask();
+void MotorAngleTask();
 void StartChassisTask();
 
 MotorInstance *motor; // 全局电机实例指针，供测试任务使用
@@ -48,14 +50,22 @@ const osThreadAttr_t testTask_attributes = {
   .priority = (osPriority_t)osPriorityNormal,
 };
 
+osThreadId_t angleTestTaskHandle;
+const osThreadAttr_t angleTestTask_attributes = {
+  .name = "angleTestTask",
+  .stack_size = 256 * sizeof(StackType_t),
+  .priority = (osPriority_t)osPriorityNormal,
+};
+
 void TaskInit()
 {
     DBUS_Init(); // 初始化遥控器数据接收
-    chassisInit(); // 初始化底盘电机
+    // chassisInit(); // 初始化底盘电机
 
-    chassisTaskHandle = osThreadNew(StartChassisTask, NULL, &chassisTask_attributes);
-    motorTaskHandle = osThreadNew(StartMotorTask, NULL, &motorTask_attributes);
-    // testTaskHandle = osThreadNew(MotorTestTask, NULL, &testTask_attributes);
+    // chassisTaskHandle = osThreadNew(StartChassisTask, NULL, &chassisTask_attributes);
+    // motorTaskHandle = osThreadNew(StartMotorTask, NULL, &motorTask_attributes);
+    angleTestTaskHandle = osThreadNew(MotorAngleTask, NULL, &angleTestTask_attributes);
+    testTaskHandle = osThreadNew(MotorTestTask, NULL, &motorTask_attributes);
 
 
 
@@ -72,51 +82,51 @@ void TaskInit()
 
 void StartChassisTask()
 {
-    
+    BMI088_Init();
     while (1)
     {
-        chassis_set_rc_control(DBUS_Data.ch0, DBUS_Data.ch1, DBUS_Data.ch2, DBUS_Data.sw2);
-        MotorControl(); // 执行电机控制逻辑
-        osDelay(2); // 2ms周期
+        // chassis_set_rc_control(DBUS_Data.ch0, DBUS_Data.ch1, DBUS_Data.ch2, DBUS_Data.sw2);
+        // MotorControl(); // 执行电机控制逻辑
+        // osDelay(2); // 2ms周期
     }
 }
 
 void MotorTestTask()
 {
-    // Motor_Init_Config_s motor_config0 = {
-    //     .motor_type = M2006,
-    //     .can_config = {
-    //         .can_handle = &hcan1,
-    //         .rx_id = 0x201,
-    //             // 回调函数与父指针在MotorInit中设置
-    //     },
-    //     .working_flag = RUNNING,
-    //     .control_mode = SPEED_CONTROL,
-    //     .speed_pid_config = {
-    //         .kp = 1.6,
-    //         .ki = 0,
-    //         .kd = 0,
-    //         .i_max = 0,
-    //         .out_max = 3000,
-    //         },
-    //         .ref = 0,  
-    //     .angle_pid_config = {
-    //         .kp = 700,
-    //         .ki = 0,
-    //         .kd = 10,
-    //         .i_max = 0,
-    //         .out_max = 30000,
-    //     },
-    // };
-    // motor = Motor_init_and_grouping(&motor_config0, 1);
+    Motor_Init_Config_s motor_config0 = {
+        .motor_type = M2006,
+        .can_config = {
+            .can_handle = &hcan1,
+            .rx_id = 0x201,
+                // 回调函数与父指针在MotorInit中设置
+        },
+        .working_flag = RUNNING,
+        .control_mode = SPEED_CONTROL,
+        .speed_pid_config = {
+            .kp = 1.6,
+            .ki = 0,
+            .kd = 0,
+            .i_max = 0,
+            .out_max = 3000,
+            },
+            .ref = 0,  
+        .angle_pid_config = {
+            .kp = 700,
+            .ki = 0,
+            .kd = 10,
+            .i_max = 0,
+            .out_max = 30000,
+        },
+    };
+    motor = Motor_init_and_grouping(&motor_config0, 1);
     
-    // // 检查初始化是否成功
-    // if (motor == NULL) {
-    //     while (1) {
-    //         HAL_GPIO_TogglePin(LED_G_GPIO_Port, LED_G_Pin);
-    //         osDelay(100);  // 快速闪烁表示初始化失败
-    //     }
-    // }
+    // 检查初始化是否成功
+    if (motor == NULL) {
+        while (1) {
+            HAL_GPIO_TogglePin(LED_G_GPIO_Port, LED_G_Pin);
+            osDelay(100);  // 快速闪烁表示初始化失败
+        }
+    }
     
     // if (motor->speed_pid == NULL) {
     //     while (1) {
@@ -125,13 +135,13 @@ void MotorTestTask()
     //     }
     // }
 
-    // MotorModeSwitch(motor, SPEED_CONTROL);      // 切换到角度控制模式
+    MotorModeSwitch(motor, ANGLE_CONTROL);      // 切换到角度控制模式
     // MotorSetSpeed(motor, 0);
     
 
     while (1)
     {
-        MotorSetSpeed(motor, DBUS_Data.ch2 * 80); // 更新电机控制参考值
+        // MotorSetSpeed(motor, DBUS_Data.ch2 * 80); // 更新电机控制参考值
         MotorControl(); // 执行电机控制逻辑
         g_test_speed_ref = motor->speed_pid->ref;
         g_test_speed_fdb = motor->speed_pid->fdb;
